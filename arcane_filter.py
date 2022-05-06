@@ -1,12 +1,18 @@
 # process(이미지로 구동함)
 
+# !wget https://github.com/Sxela/ArcaneGAN/releases/download/v0.4/ArcaneGANv0.4.jit
+# !pip -qq install facenet_pytorch
+
+
+
 
 
 from facenet_pytorch import MTCNN
 from torchvision import transforms
 import torch, PIL
+import final_stitch
 
-from tqdm.notebook import tqdm
+
 
 mtcnn = MTCNN(image_size=256, margin=80)
 
@@ -117,7 +123,7 @@ version = '0.4' #@param ['0.1','0.2','0.3','0.4']
 
 model_path = f'/content/ArcaneGANv{version}.jit' 
 in_dir = '/content/in'
-out_dir = f"/content/{model_path.split('/')[-1][:-4]}_out"
+out_dir = f"/content/arcane/output"
 
 model = torch.jit.load(model_path).eval().cuda().half()
 
@@ -141,11 +147,12 @@ def fit(img,maxsize=512):
 def show_img(f, size=1024):
   display(fit(PIL.Image.open(f),size))
 
-def process(img):
+def process(img, id):
+  torch.cuda.empty_cache()
   upload=True
   os.makedirs(in_dir, exist_ok=True)
   %cd {in_dir}/
-  !rm -rf {out_dir}/*
+  # !rm -rf {out_dir}/*
   os.makedirs(out_dir, exist_ok=True)
   in_files = sorted(glob(f'{in_dir}/*'))
   if (len(in_files)==0) | (upload):
@@ -158,9 +165,24 @@ def process(img):
   res = proc_pil_img(im, model)
   res.save(out)
 
-  out_zip = f"{out_dir}.zip"
-  !zip {out_zip} {out_dir}/*
     
-  processed = sorted(glob(f'{out_dir}/*'))[:3]
-  for f in processed: 
-    show_img(f, 256)
+  processed_a = sorted(glob(f'{out_dir}/*'))
+  print(processed_a)
+  for f in processed_a:
+    
+    # show_img(f, 256)   #f is output file path 
+    if img.split('/')[-1].split('.')[0] in f.split('/')[-1].split('.')[0]:
+      
+      torch.cuda.empty_cache()
+      return f
+    # return f
+
+
+def filter(img1,img2,img3,img4):
+  
+  processed = []
+  processed.append(process(img1,1))
+  processed.append(process(img2,2))
+  processed.append(process(img3,3))
+  processed.append(process(img4,4))
+  return final_stitch.stitch(processed)
