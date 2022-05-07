@@ -1,50 +1,35 @@
-import cv2
-from pygame import SRCALPHA
 
+from PIL import Image
+import final_stitch
 
-def elon_sticker(dst_f, ID):
-    src = cv2.imread(dst_f, cv2.IMREAD_UNCHANGED)
-    if ID == 1:
-        dst = cv2.imread('elon/foregrounds.png')
-    elif ID == 2:
-        src = cv2.imread('elon/foregrounds.png')
-    elif ID == 3:
-        src = cv2.imread('elon/foregrounds.png')
-    elif ID == 4:
-        src = cv2.imread('elon/foregrounds.png')
+foreground_list=['elon/foregrounds.png','elon/foregrounds.png','elon/foregrounds.png','elon/foregrounds.png']
 
-    mask = src[:, :, -1]    # mask는 알파 채널로 만든 마스크 영상
+def process(img, id):
     
-    # mask = cv2.imread('elon\mask.png')    # mask는 알파 채널로 만든 마스크 영상
-    src = src[:, :, 0:3]    # src는 b, g, r 3채널로 구성된 컬러 영상
-    dst = cv2.resize(dst, (1080, 720))
+    foreground = Image.open(foreground_list[id-1])
+    background = Image.open(img)
 
-    h, w = src.shape[:2]
+    bw, bh = background.size
+    fw, fh = foreground.size
+    m= int(fw/2)
 
-    crop = dst[0:h, 0:w]    # src, mask와 같은 크기의 부분 영상 추출
+    # print(bw)
+    # print(m)
 
-    cv2.copyTo(src, mask, crop)
-
-    # cv2.imshow('src', src)
-    # cv2.imshow('dst', dst)
-    # cv2.imshow('mask', mask)
-    out = 'elon/output/' + dst_f.split('/')[-1].split('.')[0]+'.jpg'
-    cv2.imwrite(out, dst)
-    return out
-
-
-dst2 = 'elon/backgrounds.png'
-
-print(elon_sticker(dst2, 1))
+    background.paste(foreground,(round((bw/2 - m)), bh-fh),foreground)
+    out_dir = 'elon/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
+    background = background.convert("RGB")
+    background.save(out_dir)
+    return out_dir
 
 
-# vid = cv2.VideoCapture(0)
-# while True:
+def filter(img1,img2,img3,img4):
+    processed = []
+    processed.append(process(img1,1))
+    processed.append(process(img2,2))
+    processed.append(process(img3,3))
+    processed.append(process(img4,4))
 
-#     ret, frame = vid.read()
-#     cv2.imshow('dope', frame)
-#     if cv2.waitKey(1) == ord('q'):
-#         break
+    print(processed)
 
-# vid.release()
-# cv2.destroyAllWindows()
+    return final_stitch.stitch(processed)

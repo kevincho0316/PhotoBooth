@@ -44,9 +44,7 @@ def predict():
         file1.save(input_file4)
         
         if types == 'elon':
-            output_file = ''
-            print("NOT READY FEATURE")
-            # output_file = elon_filter.elon_sticker('elon/foregrounds.png',input_file,id)
+            output_file = elon_filter.elon_sticker(input_file1,input_file2,input_file3,input_file4)
         elif types == 'depth':
             output_file = depth_filter.filter(input_file1,input_file2,input_file3,input_file4)
         elif types == 'arcane':

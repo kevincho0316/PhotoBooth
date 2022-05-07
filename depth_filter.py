@@ -1,42 +1,39 @@
 import cv2
-import time
 import torch
-import final_stitch
-#######################
-# process('/content/gfdud33u33.jpg', 1 )
-##########################
-
-def stitch(img_list, interpolation 
-                   = cv2.INTER_CUBIC):
-      # take minimum width
-
-    out = '/content/product/'
-
-    img_readed = []
-    for img in img_list:
-        img_readed.append(cv2.imread(img))
-
-    w_min = min(img.shape[1] 
-                for img in img_readed)
-      
-    # resizing images
-    im_list_resize = [cv2.resize(img,
-                      (w_min, int(img.shape[0] * w_min / img.shape[1])),
-                                 interpolation = interpolation)
-                      for img in img_readed]
-
-    img_v_resize = cv2.vconcat(im_list_resize)
-    # return final image
-    out_dir = out + img_list[0].split('/')[-1].split('.')[0][0:-2]+'.jpg'
-    cv2.imwrite(out_dir, img_v_resize)
-    return out_dir
-
-import cv2
-import torch
+import numpy as np
 
 #######################
 # process('/content/gfdud33u33.jpg', 1 )
 ##########################
+data_list=[ ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
+            ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
+            ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
+            ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
+            
+            
+            ]
+
+def place(img, id):
+    
+    people = Image.open(img)
+    foreground = Image.open(data_list[id-1][4])
+    people.thumbnail((data_list[id-1][1],data_list[id-1][1])) #한변의 최대 길이
+    fw, fh = people.size
+    people = people.rotate(data_list[id-1][2],expand=True)
+    
+
+    background = Image.open(data_list[id-1][0])
+    
+    
+
+    # print(m)
+    background.paste(people,data_list[id-1][3],people)
+    background.paste(foreground,(0,0),foreground)
+    out_dir = 'depth/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
+    background = background.convert("RGB")
+    background.save(out_dir)
+
+
 
 def process(filedir, id):
     model_type = "DPT_Large"     # MiDaS v3 - Large     (highest accuracy, slowest inference speed)
@@ -73,6 +70,7 @@ def process(filedir, id):
 
     output = prediction.cpu().numpy()
     # plt.imshow(output)
+    np.save('/content/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
 
 
     frame = cv2.imread(filedir, 0)
@@ -88,19 +86,12 @@ def process(filedir, id):
     resizedOrig = cv2.resize(frame, mask.shape[1::-1])
     resizedOrig.shape
     resizedOrig[mask] = 0
-    cv2.imwrite('/content/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
-
-    if id == 1:
-        print()
-    elif id == 2:
-        print()
-    elif id == 3:
-        print()
-    elif id == 4:
-        print()
+    cv2.imwrite('/content/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
+    
+    place('/content/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
     
     torch.cuda.empty_cache()
-    return '/content/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
+    return '/content/depth/output/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
 
 def filter(img1,img2,img3,img4):
     processed = []

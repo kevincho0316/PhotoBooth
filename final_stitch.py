@@ -70,7 +70,7 @@ def stitch(images_list):
         
     qr = qrcode.QRCode(
         version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=10,
         border=0.1,
         )
@@ -82,7 +82,7 @@ def stitch(images_list):
 
     # 1012    1215
     qr_img = qr_img.resize((213,213))
-    plate.paste(qr_img,(1012,3171))
+    plate.paste(qr_img,(1004,3171))
     final = plate.convert("RGB")
 
 
@@ -100,10 +100,10 @@ def stitch(images_list):
 
 
 
-import time
-start = time.time() 
+# import time
+# start = time.time() 
 
-print(stitch(['./depth/img/light_travel/sample.png', './depth/img/radioactive_pool/sample.png', './depth/img/to_the_moon/sample.png', './depth/img/doge_mountain/sample.png']))
+# print(stitch(['./depth/img/light_travel/sample.png', './depth/img/radioactive_pool/sample.png', './depth/img/to_the_moon/sample.png', './depth/img/doge_mountain/sample.png']))
 
 
-print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
+# print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
