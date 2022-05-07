@@ -5,14 +5,11 @@ import numpy as np
 #######################
 # process('/content/gfdud33u33.jpg', 1 )
 ##########################
-data_list=[ ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
-            ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
-            ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
-            ['depth/img/to_the_moon/background.png',400,-15,(346, 95),'depth/img/to_the_moon/forground.png'],
-            
-            
+data_list=[ ['depth/img/doge_mountain/background.png',600,0,(277, 70),'depth/img/doge_mountain/foreground.png'],
+            ['depth/img/light_travel/background.png',450,0,(330, 100),'depth/img/light_travel/foreground.png'],
+            ['depth/img/radioactive_pool/background.png',500,0,(190, 189),'depth/img/radioactive_pool/foreground.png'],
+            ['depth/img/to_the_moon/background.png',450,-15,(320, 35),'depth/img/to_the_moon/foreground.png'],
             ]
-
 def place(img, id):
     
     people = Image.open(img)
@@ -32,7 +29,7 @@ def place(img, id):
     out_dir = 'depth/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
     background = background.convert("RGB")
     background.save(out_dir)
-
+    return out_dir
 
 
 def process(filedir, id):
