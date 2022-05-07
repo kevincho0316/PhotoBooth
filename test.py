@@ -1,23 +1,23 @@
-import cv2
+import time
+start = time.time() 
+import qrcode
+from qrcode.image.styledpil import StyledPilImage
+from qrcode.image.styles.moduledrawers.pil import HorizontalBarsDrawer
+from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
 
-# 마스크 영상을 이용한 영상 합성
-src = cv2.imread('elon/foregrounds.png', cv2.IMREAD_COLOR)        # 컬러 영상
-mask = cv2.imread('elon/mask.png', cv2.IMREAD_COLOR)  
-dst = cv2.imread('elon/backgrounds.png', cv2.IMREAD_COLOR)
+qr = qrcode.QRCode(
+    version=1,
+    error_correction=qrcode.constants.ERROR_CORRECT_Q,
+    box_size=10,
+    border=0.1,
+    )
+qr.add_data('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
 
-# # 파일이 불러오기 확인
-# if src is None or mask is None or dst is None:
-#     print('Image load failed')
-#     sys.exit()
+img_1 = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer(
+), color_mask=HorizontalGradiantColorMask())
+# img_2 = qr.make_image(image_factory=StyledPilImage, color_mask=RadialGradiantColorMask())
 
 
-# dst를 꼭 입력값으로 넣어줘야 합니다.
-# src, mask, dst크기가 같아야 합니다.
-# src, dst 크기가 다르다면 dst 영상을 추출하여 입력값으로 넣어주면 됩니다. (추출한 부분에 scr 형성)
-cv2.copyTo(src, mask, dst)
+img_1.save("some_file3.png")
 
-cv2.imshow('src', src)
-cv2.imshow('dst', dst)
-cv2.imshow('mask', mask)
-cv2.waitKey()
-cv2.destroyAllWindows()
+print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간

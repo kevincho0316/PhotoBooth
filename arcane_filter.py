@@ -1,7 +1,8 @@
 # process(이미지로 구동함)
 
-# !wget https://github.com/Sxela/ArcaneGAN/releases/download/v0.4/ArcaneGANv0.4.jit
-# !pip -qq install facenet_pytorch
+# wget https://github.com/Sxela/ArcaneGAN/releases/download/v0.4/ArcaneGANv0.4.jit
+# pip -qq install facenet_pytorch
+# pip install qrcode pillow 
 
 
 
