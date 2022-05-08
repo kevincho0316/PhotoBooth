@@ -31,16 +31,16 @@ def predict():
         file3 = request.files['pic3']
         file4 = request.files['pic4']
 
-        input_file1 = os.path.join(app.instance_path,  types, 'before', file1.filename)
+        input_file1 = os.path.join(types, 'before', file1.filename)
         file1.save(input_file1)
         
-        input_file2 = os.path.join(app.instance_path,  types, 'before', file2.filename)
+        input_file2 = os.path.join(types, 'before', file2.filename)
         file1.save(input_file2)
         
-        input_file3 = os.path.join(app.instance_path,  types, 'before', file3.filename)
+        input_file3 = os.path.join(types, 'before', file3.filename)
         file1.save(input_file3)
         
-        input_file4 = os.path.join(app.instance_path,  types, 'before', file4.filename)
+        input_file4 = os.path.join(types, 'before', file4.filename)
         file1.save(input_file4)
         
         if types == 'elon':
@@ -58,4 +58,4 @@ def predict():
         return jsonify({'id': id, 'file': output_file})
         
 if __name__ == '__main__':
-    app.run()
+    app.run('0.0.0.0', port=5000, debug=True)
