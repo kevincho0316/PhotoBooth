@@ -38,7 +38,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import HorizontalBarsDrawer
 from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
 
-
+ip = 'http://104.197.148.203:8080'
 
 def stitch(images_list):
     imgs = [Image.open(i) for i in images_list]
@@ -76,7 +76,7 @@ def stitch(images_list):
         border=0.1,
         )
     # qr.add_data('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-    qr.add_data(out_dir)
+    qr.add_data(ip+out_dir)
 
     qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer(
     ))

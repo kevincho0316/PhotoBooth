@@ -1,6 +1,7 @@
 import cv2
 import torch
 import numpy as np
+import final_stitch
 
 #######################
 # process('/content/gfdud33u33.jpg', 1 )

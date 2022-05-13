@@ -156,8 +156,8 @@ def process(img, id):
   # !rm -rf {out_dir}/*
   os.makedirs(out_dir, exist_ok=True)
   in_files = sorted(glob(f'{in_dir}/*'))
-  if (len(in_files)==0) | (upload):
-    !rm -rf {in_dir}/*
+  # if (len(in_files)==0) | (upload):
+  #   !rm -rf {in_dir}/*
     
 
   out = f"{out_dir}/{img.split('/')[-1].split('.')[0]}.jpg"

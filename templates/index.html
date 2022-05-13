@@ -1,46 +1,21 @@
 <!DOCTYPE html>
 <html>
+    <style>
+        body { font-family: Consolas, sans-serif; }
+        h1 { margin: 30px px; text-align: center; }
+        img { max-width: 100%; display: block; margin: 0px 0px 500px 0px; }
+      </style>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Classification</title>
 </head>
+
 <body>
-
-    <form action="http://localhost:5000/predict"
-          method="post"
-          enctype="multipart/form-data">
-        <input type="file" name="pic" id="file" />
-        <input type="submit" />
-        <div id="preview"></div>
-
-    </form>
-
-    <script>
-        var upload = document.querySelector('#file');
-        var upload2 = document.querySelector('#preview');
-
-        var reader = new FileReader();
-        reader.onload = (function () {
-
-        	this.image = document.createElement('img');
-        	var vm = this;
-
-        	return function (e) {
-        		vm.image.src = e.target.result
-        	}
-        })()
-
-        upload.addEventListener('change',function (e) {
-        	var get_file = e.target.files;
-
-        	if(get_file){
-        		reader.readAsDataURL(get_file[0]);
-       		 }
-        	image.style.maxWidth='500px';
-        	image.style.maxHeight='500px';
-        	preview.appendChild(image);
-        })
-    </script>
+    <h1>🙉⚙️🙉</h1>
+    <h1>메타의 포토부스 API입니다.</h1>
+    <h1>제발 공격 하지 말아주세요</h1>
+    <img src="dogaja.jpg" alt="My Image">
 </body>
 </html>

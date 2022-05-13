@@ -1,0 +1,5 @@
+pillow
+typing_extensions
+facenet_pytorch
+opencv-python
+flask
