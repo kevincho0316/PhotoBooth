@@ -122,9 +122,9 @@ def proc_pil_img(input_image, model):
 
 version = '0.4' #@param ['0.1','0.2','0.3','0.4']
 
-model_path = f'/content/ArcaneGANv{version}.jit' 
-in_dir = '/content/in'
-out_dir = f"/content/arcane/output"
+model_path = f'ArcaneGANv{version}.jit' 
+in_dir = '/arcane/in'
+out_dir = f"/arcane/output"
 
 model = torch.jit.load(model_path).eval().cuda().half()
 
