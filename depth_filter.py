@@ -1,7 +1,11 @@
 import cv2
+from PIL import Image
 import torch
 import numpy as np
 import final_stitch
+import os
+B_path= os.path.dirname(os.path.abspath(__file__))
+
 
 #######################
 # process('/content/gfdud33u33.jpg', 1 )
@@ -27,11 +31,10 @@ def place(img, id):
     # print(m)
     background.paste(people,data_list[id-1][3],people)
     background.paste(foreground,(0,0),foreground)
-    out_dir = 'depth/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
+    out_dir = B_path +'/depth/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
     background = background.convert("RGB")
     background.save(out_dir)
     return out_dir
-
 
 def process(filedir, id):
     model_type = "DPT_Large"     # MiDaS v3 - Large     (highest accuracy, slowest inference speed)
@@ -68,7 +71,7 @@ def process(filedir, id):
 
     output = prediction.cpu().numpy()
     # plt.imshow(output)
-    np.save('/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
+    np.save(B_path+'/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
 
 
     frame = cv2.imread(filedir, 0)
@@ -84,12 +87,12 @@ def process(filedir, id):
     resizedOrig = cv2.resize(frame, mask.shape[1::-1])
     resizedOrig.shape
     resizedOrig[mask] = 0
-    cv2.imwrite('/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
+    cv2.imwrite(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
     
-    place('/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
+    place(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
     
     torch.cuda.empty_cache()
-    return '/depth/output/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
+    return B_path+'/depth/output/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
 
 def filter(img1,img2,img3,img4):
     processed = []
