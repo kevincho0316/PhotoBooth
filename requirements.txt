@@ -4,3 +4,4 @@ facenet_pytorch
 opencv-python
 flask
 IPython
+timm
