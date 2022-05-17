@@ -68,7 +68,7 @@ def process(filedir, id):
 
     output = prediction.cpu().numpy()
     # plt.imshow(output)
-    np.save('/content/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
+    np.save('/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
 
 
     frame = cv2.imread(filedir, 0)
@@ -84,12 +84,12 @@ def process(filedir, id):
     resizedOrig = cv2.resize(frame, mask.shape[1::-1])
     resizedOrig.shape
     resizedOrig[mask] = 0
-    cv2.imwrite('/content/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
+    cv2.imwrite('/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
     
-    place('/content/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
+    place('/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
     
     torch.cuda.empty_cache()
-    return '/content/depth/output/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
+    return '/depth/output/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
 
 def filter(img1,img2,img3,img4):
     processed = []
