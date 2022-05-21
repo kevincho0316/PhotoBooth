@@ -92,15 +92,15 @@ def process(filedir, id):
     place(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
     
     torch.cuda.empty_cache()
-    return B_path+'/depth/output/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
+    return B_path+'/depth/output/'+filedir.split('/')[-2:-1].split('.')[0]+'.jpg'
 
-def filter(img1,img2,img3,img4):
+
+def filter(input_list):
+    print(input_list)
     processed = []
-    processed.append(process(img1,1))
-    processed.append(process(img2,2))
-    processed.append(process(img3,3))
-    processed.append(process(img4,4))
-
+    for i in range(len(input_list)):
+        processed.append(process(input_list[i],i))
+    
     print(processed)
 
     return final_stitch.stitch(processed)

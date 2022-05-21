@@ -12,6 +12,10 @@ import depth_filter
 from PIL import Image
 from flask import Flask, jsonify, request
 from flask import render_template
+import os
+import zipfile
+from glob import glob
+B_path= os.path.dirname(os.path.abspath(__file__))
 
 
 app = Flask(__name__)
@@ -26,29 +30,23 @@ def predict():
     if request.method == 'POST':
         id = request.form.get('id')
         types = request.form.get('type')
-        file1 = request.files['pic1']               #    id-1,id-2 로 요청한다
-        file2 = request.files['pic2']
-        file3 = request.files['pic3']
-        file4 = request.files['pic4']
+        zip_f = request.files['zip']     
+        input_file = os.path.join(B_path, types, 'before', zip_f.filename)
+        output_zip = os.path.join(B_path, types, 'before', zip_f.filename[:-3])
+        zip_f.save(input_file)
 
-        input_file1 = os.path.join(types, 'before', file1.filename)
-        file1.save(input_file1)
-        
-        input_file2 = os.path.join(types, 'before', file2.filename)
-        file1.save(input_file2)
-        
-        input_file3 = os.path.join(types, 'before', file3.filename)
-        file1.save(input_file3)
-        
-        input_file4 = os.path.join(types, 'before', file4.filename)
-        file1.save(input_file4)
-        
+        with zipfile.ZipFile(input_file, 'r') as zip_ref:
+            zip_ref.extractall(output_zip)
+
+        os.remove(os.path.join(types, 'before', zip_f.filename))
+
+
         if types == 'elon':
-            output_file = elon_filter.elon_sticker(input_file1,input_file2,input_file3,input_file4)
+            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
         elif types == 'depth':
-            output_file = depth_filter.filter(input_file1,input_file2,input_file3,input_file4)
+            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
         elif types == 'arcane':
-            output_file = arcane_filter.filter(input_file1,input_file2,input_file3,input_file4)
+            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
         
 
 

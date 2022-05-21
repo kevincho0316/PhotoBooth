@@ -1,12 +1,14 @@
 
 from PIL import Image
 import final_stitch
+import os
+B_path= os.path.dirname(os.path.abspath(__file__))
 
 foreground_list=['elon/foregrounds.png','elon/foregrounds.png','elon/foregrounds.png','elon/foregrounds.png']
 
 def process(img, id):
     
-    foreground = Image.open(foreground_list[id-1])
+    foreground = Image.open(foreground_list[id])
     background = Image.open(img)
 
     bw, bh = background.size
@@ -17,22 +19,21 @@ def process(img, id):
     # print(m)
 
     background.paste(foreground,(round((bw/2 - m)), bh-fh),foreground)
-    out_dir = 'elon/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
+    out_dir = B_path+'/elon/output/'+img.split('/')[-2:-1].split('.')[0]+'.jpg'
     background = background.convert("RGB")
     background.save(out_dir)
     return out_dir
 
 
-def filter(img1,img2,img3,img4):
+def filter(input_list):
+    print(input_list)
     processed = []
-    processed.append(process(img1,1))
-    processed.append(process(img2,2))
-    processed.append(process(img3,3))
-    processed.append(process(img4,4))
-
+    for i in range(len(input_list)):
+        processed.append(process(input_list[i],i))
+    
     print(processed)
 
     return final_stitch.stitch(processed)
 
-filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
+# filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
 print("[*]ELON-ready to go")
