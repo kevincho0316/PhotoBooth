@@ -151,10 +151,10 @@ def show_img(f, size=1024):
 def process(img, id):
   torch.cuda.empty_cache()
   upload=True
-  os.makedirs(in_dir, exist_ok=True)
+  # os.makedirs(in_dir, exist_ok=True)
   # %cd {in_dir}/
   # !rm -rf {out_dir}/*
-  os.makedirs(out_dir, exist_ok=True)
+  # os.makedirs(out_dir, exist_ok=True)
   in_files = sorted(glob(f'{in_dir}/*'))
   # if (len(in_files)==0) | (upload):
   #   !rm -rf {in_dir}/*
