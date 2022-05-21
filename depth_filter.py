@@ -107,4 +107,4 @@ def filter(img1,img2,img3,img4):
 
 
 filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
-print("[*]ELON-ready to go")
+print("[*]DEPTH-ready to go")

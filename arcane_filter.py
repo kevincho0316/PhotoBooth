@@ -12,6 +12,8 @@ from facenet_pytorch import MTCNN
 from torchvision import transforms
 import torch, PIL
 import final_stitch
+import os
+B_path= os.path.dirname(os.path.abspath(__file__))
 
 
 
@@ -123,8 +125,8 @@ def proc_pil_img(input_image, model):
 version = '0.4' #@param ['0.1','0.2','0.3','0.4']
 
 model_path = f'ArcaneGANv{version}.jit' 
-in_dir = '/arcane/in'
-out_dir = f"/arcane/output"
+in_dir = B_path+'/arcane/in'
+out_dir = B_path+"/arcane/output"
 
 model = torch.jit.load(model_path).eval().cuda().half()
 
@@ -155,7 +157,7 @@ def process(img, id):
   # %cd {in_dir}/
   # !rm -rf {out_dir}/*
   # os.makedirs(out_dir, exist_ok=True)
-  in_files = sorted(glob(f'{in_dir}/*'))
+  # in_files = sorted(glob(f'{in_dir}/*'))
   # if (len(in_files)==0) | (upload):
   #   !rm -rf {in_dir}/*
     
@@ -165,6 +167,7 @@ def process(img, id):
   im = scale_by_face_size(im, target_face=300, max_res=1_500_000, max_upscale=2)
   res = proc_pil_img(im, model)
   res.save(out)
+  print(out)
 
     
   processed_a = sorted(glob(f'{out_dir}/*'))
@@ -189,4 +192,4 @@ def filter(img1,img2,img3,img4):
   return final_stitch.stitch(processed)
 
 filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
-print("[*]ELON-ready to go")
+print("[*]ARCANE-ready to go")
