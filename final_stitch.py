@@ -42,7 +42,7 @@ ip = 'http://104.197.148.203:8080'
 
 def stitch(images_list):
     imgs = [Image.open(i) for i in images_list]
-    plate = Image.open('final_stitch/plate.png')
+    plate = Image.open('final_stitch/plate-v2-f.png')
 
     # If you're using an older version of Pillow, you might have to use .size[0] instead of .width
     # and later on, .size[1] instead of .height
@@ -65,7 +65,7 @@ def stitch(images_list):
 
         y += img.height
     
-    plate.paste(img_merge,(72,100))
+    plate.paste(img_merge,(72,278))
   
     out_dir = 'product/' + images_list[0].split('/')[-1].split('.')[0][0:-2]+'.jpg'
         
@@ -76,35 +76,24 @@ def stitch(images_list):
         border=0.1,
         )
     # qr.add_data('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-    qr.add_data(ip+out_dir)
+    qr.add_data(ip+'/'+out_dir)
 
-    qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer(
-    ))
+    qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer())
     # img_2 = qr.make_image(image_factory=StyledPilImage, color_mask=RadialGradiantColorMask())
-
-    # 1012    1215
-    qr_img = qr_img.resize((213,213))
-    plate.paste(qr_img,(1004,3171))
+    qr_s = 120
+    qr_img = qr_img.resize((qr_s,qr_s))
+    plate.paste(qr_img,(612-int(qr_s/2),3470))
     final = plate.convert("RGB")
-
-
-
-
-
-    final = final.convert('RGB')
     final.save(out_dir)
     return out_dir
 
 
 
 
+import time
+start = time.time() 
+
+print(stitch(['./depth/img/light_travel/sample.png', './depth/img/radioactive_pool/sample.png', './depth/img/to_the_moon/sample.png', './depth/img/doge_mountain/sample.png']))
 
 
-
-# import time
-# start = time.time() 
-
-# print(stitch(['./depth/img/light_travel/sample.png', './depth/img/radioactive_pool/sample.png', './depth/img/to_the_moon/sample.png', './depth/img/doge_mountain/sample.png']))
-
-
-# print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
+print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간

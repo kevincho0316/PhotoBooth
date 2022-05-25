@@ -13,10 +13,7 @@ import requests
 files = {
     'id': (None, '"1"'),
     'type': (None, '"elon"'),
-    'pic1': open('"/elon/backgrounds.png"', 'rb'),
-    'pic2': open('"/elon/foregrounds.png"', 'rb'),
-    'pic3': open('"/elon/l_2021071602000853400181201-1.jpg"', 'rb'),
-    'pic4': open('"/elon/mask.png"', 'rb'),
+    'zip': open('"/elon/backgrounds.png"', 'rb'),
 }
 
 response = requests.post('http://104.197.148.203:5000/predict', files=files)
