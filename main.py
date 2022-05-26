@@ -44,9 +44,9 @@ def predict():
         if types == 'elon':
             output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
         elif types == 'depth':
-            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
+            output_file = depth_filter.filter(sorted(glob(f'{output_zip}/*')))
         elif types == 'arcane':
-            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
+            output_file = arcane_filter.filter(sorted(glob(f'{output_zip}/*')))
         
 
 

@@ -19,7 +19,7 @@ def process(img, id):
     # print(m)
 
     background.paste(foreground,(round((bw/2 - m)), bh-fh),foreground)
-    out_dir = B_path+'/elon/output/'+img.split('/')[-2:-1].split('.')[0]+'.jpg'
+    out_dir = B_path+'/elon/output/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
     background = background.convert("RGB")
     background.save(out_dir)
     return out_dir

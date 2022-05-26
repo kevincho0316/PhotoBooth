@@ -31,7 +31,8 @@ def place(img, id):
     # print(m)
     background.paste(people,data_list[id-1][3],people)
     background.paste(foreground,(0,0),foreground)
-    out_dir = B_path +'/depth/output/'+img.split('/')[-1].split('.')[0]+'.jpg'
+    out_dir = B_path +'/depth/output/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
+
     background = background.convert("RGB")
     background.save(out_dir)
     return out_dir
@@ -87,12 +88,13 @@ def process(filedir, id):
     resizedOrig = cv2.resize(frame, mask.shape[1::-1])
     resizedOrig.shape
     resizedOrig[mask] = 0
-    cv2.imwrite(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg', resizedOrig)
+    cv2.imwrite(B_path+'/depth/depth_result_cut/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
+, resizedOrig)
     
-    place(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-1].split('.')[0]+'.jpg',id)
+    place(B_path+'/depth/depth_result_cut/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg',id)
     
     torch.cuda.empty_cache()
-    return B_path+'/depth/output/'+filedir.split('/')[-2:-1].split('.')[0]+'.jpg'
+    return B_path+'/depth/output/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
 
 
 def filter(input_list):
@@ -106,5 +108,5 @@ def filter(input_list):
     return final_stitch.stitch(processed)
 
 
-filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
+# filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
 print("[*]DEPTH-ready to go")
