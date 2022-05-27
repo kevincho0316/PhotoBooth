@@ -193,5 +193,5 @@ def filter(input_list):
 
     return final_stitch.stitch(processed)
 
-filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])
+# filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])
 print("[*]ARCANE-ready to go")

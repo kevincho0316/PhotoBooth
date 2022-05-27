@@ -15,6 +15,14 @@ data_list=[ ['depth/img/doge_mountain/background.png',600,0,(277, 70),'depth/img
             ['depth/img/radioactive_pool/background.png',500,0,(190, 189),'depth/img/radioactive_pool/foreground.png'],
             ['depth/img/to_the_moon/background.png',450,-15,(320, 35),'depth/img/to_the_moon/foreground.png'],
             ]
+
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print('Error: Creating directory. ' + directory)
+
 def place(img, id):
     
     people = Image.open(img)
@@ -31,7 +39,8 @@ def place(img, id):
     # print(m)
     background.paste(people,data_list[id-1][3],people)
     background.paste(foreground,(0,0),foreground)
-    out_dir = B_path +'/depth/output/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
+    createFolder(B_path +'/depth/output/'+img.split('/')[-2])
+    out_dir = B_path +'/depth/output/'+img.split('/')[-2]+'/'+img.split('/')[-1].split('.')[0]+'.jpg'
 
     background = background.convert("RGB")
     background.save(out_dir)
@@ -72,7 +81,8 @@ def process(filedir, id):
 
     output = prediction.cpu().numpy()
     # plt.imshow(output)
-    np.save(B_path+'/depth/depth_result/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
+    createFolder(B_path+'/depth/depth_result/'+filedir.split('/')[-2])
+    np.save(B_path+'/depth/depth_result/'+filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
 
 
     frame = cv2.imread(filedir, 0)
@@ -88,14 +98,15 @@ def process(filedir, id):
     resizedOrig = cv2.resize(frame, mask.shape[1::-1])
     resizedOrig.shape
     resizedOrig[mask] = 0
-    cv2.imwrite(B_path+'/depth/depth_result_cut/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
-, resizedOrig)
+
+    f_path = filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
+    createFolder(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-2])
+    cv2.imwrite(B_path+'/depth/depth_result_cut/'+f_path, resizedOrig)
     
-    place(B_path+'/depth/depth_result_cut/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg',id)
+    place(B_path+'/depth/depth_result_cut/'+f_path,id)
     
     torch.cuda.empty_cache()
-    return B_path+'/depth/output/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
-
+    return B_path+'/depth/output/'+f_path
 
 def filter(input_list):
     print(input_list)
@@ -108,5 +119,5 @@ def filter(input_list):
     return final_stitch.stitch(processed)
 
 
-# filter('test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png')
+filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])
 print("[*]DEPTH-ready to go")

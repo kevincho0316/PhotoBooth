@@ -56,4 +56,4 @@ def predict():
         return jsonify({'id': id, 'file': output_file})
         
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('127.0.0.1', port=5000, debug=True)

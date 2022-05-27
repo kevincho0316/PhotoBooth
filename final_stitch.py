@@ -89,11 +89,3 @@ def stitch(images_list):
 
 
 
-
-import time
-start = time.time() 
-
-print(stitch(['./depth/img/light_travel/sample.png', './depth/img/radioactive_pool/sample.png', './depth/img/to_the_moon/sample.png', './depth/img/doge_mountain/sample.png']))
-
-
-print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
