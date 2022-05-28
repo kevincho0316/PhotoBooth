@@ -23,13 +23,22 @@ def createFolder(directory):
     except OSError:
         print('Error: Creating directory. ' + directory)
 
-def place(img, id):
+def place(ori_img,mask_fd, id):
     
-    people = Image.open(img)
+    mask = Image.open(mask_fd)
+    ori_img = Image.open(ori_img)
     foreground = Image.open(data_list[id-1][4])
-    people.thumbnail((data_list[id-1][1],data_list[id-1][1])) #한변의 최대 길이
-    fw, fh = people.size
-    people = people.rotate(data_list[id-1][2],expand=True)
+    
+    
+    ori_img.thumbnail((data_list[id-1][1],data_list[id-1][1]))
+    fw, fh = ori_img.size
+    ori_img = ori_img.rotate(data_list[id-1][2],expand=True)
+    
+
+
+    mask.thumbnail((data_list[id-1][1],data_list[id-1][1])) #한변의 최대 길이
+    fw, fh = mask.size
+    mask = mask.rotate(data_list[id-1][2],expand=True)
     
 
     background = Image.open(data_list[id-1][0])
@@ -37,10 +46,10 @@ def place(img, id):
     
 
     # print(m)
-    background.paste(people,data_list[id-1][3],people)
+    background.paste(ori_img,data_list[id-1][3],mask)
     background.paste(foreground,(0,0),foreground)
-    createFolder(B_path +'/depth/output/'+img.split('/')[-2])
-    out_dir = B_path +'/depth/output/'+img.split('/')[-2]+'/'+img.split('/')[-1].split('.')[0]+'.jpg'
+    createFolder(B_path +'/depth/output/'+mask_fd.split('/')[-2])
+    out_dir = B_path +'/depth/output/'+mask_fd.split('/')[-2]+'/'+mask_fd.split('/')[-1].split('.')[0]+'.jpg'
 
     background = background.convert("RGB")
     background.save(out_dir)
@@ -85,7 +94,7 @@ def process(filedir, id):
     np.save(B_path+'/depth/depth_result/'+filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
 
 
-    frame = cv2.imread(filedir, 0)
+    frame = cv2.imread('depth/img/white.jpg', 0)
 
     cut = 20
     output[output < cut] = 0
@@ -103,7 +112,7 @@ def process(filedir, id):
     createFolder(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-2])
     cv2.imwrite(B_path+'/depth/depth_result_cut/'+f_path, resizedOrig)
     
-    place(B_path+'/depth/depth_result_cut/'+f_path,id)
+    place(filedir,B_path+'/depth/depth_result_cut/'+f_path,id)
     
     torch.cuda.empty_cache()
     return B_path+'/depth/output/'+f_path

@@ -7,7 +7,7 @@ mkdir -p elon/before
 
 mkdir -p depth/before
 mkdir -p depth/depth_result
-mkdir -p depth/depth_result_cut
+mkdir -p depth/depth_result_mask
 
 mkdir -p arcane/before
 mkdir -p arcane/in
