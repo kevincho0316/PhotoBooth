@@ -109,10 +109,10 @@ def process(filedir, id):
     resizedOrig[mask] = 0
 
     f_path = filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
-    createFolder(B_path+'/depth/depth_result_cut/'+filedir.split('/')[-2])
-    cv2.imwrite(B_path+'/depth/depth_result_cut/'+f_path, resizedOrig)
+    createFolder(B_path+'/depth/depth_result_mask/'+filedir.split('/')[-2])
+    cv2.imwrite(B_path+'/depth/depth_result_mask/'+f_path, resizedOrig)
     
-    place(filedir,B_path+'/depth/depth_result_cut/'+f_path,id)
+    place(filedir,B_path+'/depth/depth_result_mask/'+f_path,id)
     
     torch.cuda.empty_cache()
     return B_path+'/depth/output/'+f_path
