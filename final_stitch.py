@@ -68,7 +68,7 @@ def stitch(images_list):
     plate.paste(img_merge,(72,324))
   
     out_dir = 'product/' + images_list[0].split('/')[-1].split('.')[0][0:-2]+'.jpg'
-        
+    
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,

@@ -19,10 +19,18 @@ def process(img, id):
     # print(m)
 
     background.paste(foreground,(round((bw/2 - m)), bh-fh),foreground)
-    out_dir = B_path+'/elon/output/'+img.split('/')[-2]+img.split('/')[-1].split('.')[0]+'.jpg'
+    createFolder(B_path+'/elon/output/'+img.split('/')[-2].replace('.',''))
+    out_dir = B_path+'/elon/output/'+img.split('/')[-2].replace('.','')+"/"+img.split('/')[-1].split('.')[0]+'.jpg'
     background = background.convert("RGB")
     background.save(out_dir)
     return out_dir
+
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print('Error: Creating directory. ' + directory)
 
 
 def filter(input_list):
