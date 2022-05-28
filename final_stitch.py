@@ -42,7 +42,7 @@ ip = 'http://104.197.148.203:8080'
 
 def stitch(images_list):
     imgs = [Image.open(i) for i in images_list]
-    plate = Image.open('final_stitch/plate-v2-f.png')
+    plate = Image.open('final_stitch/plate-v3-f.png')
 
     # If you're using an older version of Pillow, you might have to use .size[0] instead of .width
     # and later on, .size[1] instead of .height
@@ -65,7 +65,7 @@ def stitch(images_list):
 
         y += img.height
     
-    plate.paste(img_merge,(72,278))
+    plate.paste(img_merge,(72,324))
   
     out_dir = 'product/' + images_list[0].split('/')[-1].split('.')[0][0:-2]+'.jpg'
         
@@ -80,9 +80,9 @@ def stitch(images_list):
 
     qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer())
     # img_2 = qr.make_image(image_factory=StyledPilImage, color_mask=RadialGradiantColorMask())
-    qr_s = 120
+    qr_s = 669-552
     qr_img = qr_img.resize((qr_s,qr_s))
-    plate.paste(qr_img,(612-int(qr_s/2),3470))
+    plate.paste(qr_img,(612-int(qr_s/2),3511))
     final = plate.convert("RGB")
     final.save(out_dir)
     return out_dir
