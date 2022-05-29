@@ -37,8 +37,8 @@ import qrcode
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import HorizontalBarsDrawer
 from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
-
-ip = 'http://104.197.148.203:8080'
+import socket
+ip = 'http://'+socket.gethostbyname(socket.getfqdn())+':8080'
 
 def stitch(images_list):
     imgs = [Image.open(i) for i in images_list]
@@ -64,8 +64,9 @@ def stitch(images_list):
         img_merge.paste(img, (0, y))
 
         y += img.height
+    (plate.width/2)-(img_merge.width/2)
     
-    plate.paste(img_merge,(72,324))
+    plate.paste(img_merge,((plate.width/2)-(img_merge.width/2),324))
   
     out_dir = 'product/' + images_list[0].split('/')[-1].split('.')[0][0:-2]+'.jpg'
     

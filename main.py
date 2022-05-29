@@ -5,6 +5,7 @@ import os
 import elon_filter
 import arcane_filter
 import depth_filter
+import socket
 
 
 # from torchvision import models
@@ -53,7 +54,7 @@ def predict():
 
 
 
-        return jsonify({'id': id, 'file': output_file})
+        return jsonify({'id': id, 'file': 'http://'+socket.gethostbyname(socket.getfqdn())+'/'+output_file})
         
 if __name__ == '__main__':
     app.run('127.0.0.1', port=5000, debug=True)
