@@ -29,6 +29,7 @@ def process(img, id,mode):
 
     background.paste(foreground,(round((bw/2 - m)), bh-fh),foreground)
     if mode == 0:
+        background.resize((980,720))
         return pilImageToSurface(background)
     elif mode == 1:
         createFolder(B_path+'/elon/output/'+img.split('/')[-2].replace('.',''))

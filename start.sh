@@ -18,5 +18,9 @@ wget https://github.com/Sxela/ArcaneGAN/releases/download/v0.4/ArcaneGANv0.4.jit
 sudo apt install python3-pip
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
+sudo apt install python3-flask
+
+export FLASK_APP='main.py'
+flask run --host=0.0.0.0
 
 

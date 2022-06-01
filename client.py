@@ -1,5 +1,6 @@
 
 import requests
+import urllib.request
 import pygame ,sys
 import pygame.camera
 from pygame.locals import *
@@ -22,8 +23,20 @@ import ctypes
 # )
 def Delete(id):
     os.remove('%d.zip' % (id))
+    os.remove("desk/%d.jpg"% (id))
+    
     for i in range(4):
         os.remove('%d.png' % (i+1))
+    
+def merge(img):
+    image1 = Image.open(img)
+    image2 = Image.open(img)
+    image1_size = image1.size
+    image2_size = image2.size
+    new_image = Image.new('RGB',(2*image1_size[0], image1_size[1]), (250,250,250))
+    new_image.paste(image1,(0,0))
+    new_image.paste(image2,(image1_size[0],0))
+    new_image.save(img)
     
 
 def api(id,type,file_dir):
@@ -42,10 +55,13 @@ def api(id,type,file_dir):
         # 'zip': open('%d.zip' % (id), 'rb'),
     }
     print(files)
-    response = requests.post('http://34.122.114.96:5000/predict', files=files)
+    response = requests.post('http://34.69.119.251:5000/predict', files=files)
 
     print(str(response.status_code) + " | " + response.text)
-    return response
+    j=response.json()
+    url = j['file']
+    urllib.request.urlretrieve(url, "desk/%d.jpg"% (id))
+    return "desk/%d.jpg"% (id)
 
 
 
@@ -161,8 +177,10 @@ while True:
     elif key == 't' or t_pass == True:
         t_pass = False
         if state == 6:
+            
+            merge(api(id, types, 'desk/'))
+            
             back = pygame.image.load('client/process.png')
-            api(id, types, 'desk/')
             # print
             state += 1
         elif state == 7:
@@ -199,7 +217,7 @@ while True:
                     state += 1
                     if state == 6:
                         t_pass=True
-                        back = pygame.image.load('client/process.png')
+                        back = pygame.image.load('client/loading.png')
                         break
 
                 for event in pygame.event.get():                

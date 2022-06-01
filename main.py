@@ -54,7 +54,5 @@ def predict():
 
 
 
-        return jsonify({'id': id, 'file': 'http://'+socket.gethostbyname(socket.getfqdn())+'/'+output_file})
+        return jsonify({'id': id, 'file': 'http://'+'34.69.119.251:8080'+'/'+output_file})
         
-if __name__ == '__main__':
-    app.run('127.0.0.1', port=5000, debug=True)
