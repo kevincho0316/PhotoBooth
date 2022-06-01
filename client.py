@@ -20,19 +20,16 @@ import ctypes
 #     # 보드 레이트 (통신 속도)
 #     baudrate=9600,
 # )
-def Delete():
-    if os.path.exists('desk/'):
-        for i in os.scandir('desk/'):
-            os.remove(i.path)
-    else:
-        return 'no file dir'
+def Delete(id):
+    os.remove('%d.zip' % (id))
+    for i in range(4):
+        os.remove('%d.png' % (i+1))
+    
 
 def api(id,type,file_dir):
-    file_path = 'desk/'
-    zip_file = zipfile.ZipFile('desk/%d.zip' % (id), "w")  # "w": write 모드
-    for file in os.listdir(file_path):
-        if file.endswith('.png'):
-            zip_file.write(os.path.join(file_path, file), compress_type=zipfile.ZIP_DEFLATED)
+    zip_file = zipfile.ZipFile('%d.zip' % (id), "w")  # "w": write 모드
+    for i in range(4):
+        zip_file.write(str(i+1)+'.png', compress_type=zipfile.ZIP_DEFLATED)
 
     zip_file.close()
     
@@ -40,12 +37,14 @@ def api(id,type,file_dir):
     files = {
         'id': (None, id),
         'type': (None, type),
-        'zip': open('desk/%d.zip' % (id), 'rb'),
+        'zip': open('%d.zip' % (id), 'rb'),
+        
+        # 'zip': open('%d.zip' % (id), 'rb'),
     }
+    print(files)
+    response = requests.post('http://34.122.114.96:5000/predict', files=files)
 
-    response = requests.post('http://34.112.218.202:5000/predict', files=files)
-
-    Delete()
+    print(str(response.status_code) + " | " + response.text)
     return response
 
 
@@ -168,6 +167,8 @@ while True:
             state += 1
         elif state == 7:
             state = 0
+            
+            Delete(id)
             back = pygame.image.load('client/first.png')
             
             id +=1
@@ -194,7 +195,7 @@ while True:
                 pygame.display.update()
                 if key == 't':
                     key = ''
-                    pygame.image.save(image,'desk/%d.png' % (state-1))
+                    pygame.image.save(image,'%d.png' % (state-1))
                     state += 1
                     if state == 6:
                         t_pass=True
