@@ -70,79 +70,79 @@ def place(ori_img,mask_fd, id,mode):
         return out_dir
 
 
-# model_type = "DPT_Large"     # MiDaS v3 - Large     (highest accuracy, slowest inference speed)
-#     # model_type = "DPT_Hybrid"   # MiDaS v3 - Hybrid    (medium accuracy, medium inference speed)
-#     #model_type = "MiDaS_small"  # MiDaS v2.1 - Small   (lowest accuracy, highest inference speed)
+model_type = "DPT_Large"     # MiDaS v3 - Large     (highest accuracy, slowest inference speed)
+    # model_type = "DPT_Hybrid"   # MiDaS v3 - Hybrid    (medium accuracy, medium inference speed)
+    #model_type = "MiDaS_small"  # MiDaS v2.1 - Small   (lowest accuracy, highest inference speed)
 
-# midas = torch.hub.load("intel-isl/MiDaS", model_type)
+midas = torch.hub.load("intel-isl/MiDaS", model_type)
 
-# device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-# midas.to(device)
-# midas.eval()
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+midas.to(device)
+midas.eval()
 
-# midas_transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
+midas_transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
 
-# if model_type == "DPT_Large" or model_type == "DPT_Hybrid":
-#     transform = midas_transforms.dpt_transform
-# else:
-#     transform = midas_transforms.small_transform
+if model_type == "DPT_Large" or model_type == "DPT_Hybrid":
+    transform = midas_transforms.dpt_transform
+else:
+    transform = midas_transforms.small_transform
 
 
-# def process(filedir, id):
+def process(filedir, id):
     
 
-#     img = cv2.imread(filedir)
-#     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.imread(filedir)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-#     input_batch = transform(img).to(device)
+    input_batch = transform(img).to(device)
 
-#     with torch.no_grad():
-#         prediction = midas(input_batch)
+    with torch.no_grad():
+        prediction = midas(input_batch)
 
-#         prediction = torch.nn.functional.interpolate(
-#             prediction.unsqueeze(1),
-#             size=img.shape[:2],
-#             mode="bicubic",
-#             align_corners=False,
-#         ).squeeze()
+        prediction = torch.nn.functional.interpolate(
+            prediction.unsqueeze(1),
+            size=img.shape[:2],
+            mode="bicubic",
+            align_corners=False,
+        ).squeeze()
 
-#     output = prediction.cpu().numpy()
-#     # plt.imshow(output)
-#     createFolder(B_path+'/depth/depth_result/'+filedir.split('/')[-2])
-#     np.save(B_path+'/depth/depth_result/'+filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
-
-
-#     frame = cv2.imread('depth/img/white.jpg', 0)
-
-#     output = depth_cut.cut(output)
+    output = prediction.cpu().numpy()
+    # plt.imshow(output)
+    createFolder(B_path+'/depth/depth_result/'+filedir.split('/')[-2])
+    np.save(B_path+'/depth/depth_result/'+filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.npy',output)
 
 
+    frame = cv2.imread('depth/img/white.jpg', 0)
 
-#     # output.size
-#     mask = output == 0
-#     resizedOrig = cv2.resize(frame, mask.shape[1::-1])
-#     resizedOrig.shape
-#     resizedOrig[mask] = 0
+    output = depth_cut.cut(output)
 
-#     f_path = filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
-#     createFolder(B_path+'/depth/depth_result_mask/'+filedir.split('/')[-2])
-#     cv2.imwrite(B_path+'/depth/depth_result_mask/'+f_path, resizedOrig)
+
+
+    # output.size
+    mask = output == 0
+    resizedOrig = cv2.resize(frame, mask.shape[1::-1])
+    resizedOrig.shape
+    resizedOrig[mask] = 0
+
+    f_path = filedir.split('/')[-2]+'/'+filedir.split('/')[-1].split('.')[0]+'.jpg'
+    createFolder(B_path+'/depth/depth_result_mask/'+filedir.split('/')[-2])
+    cv2.imwrite(B_path+'/depth/depth_result_mask/'+f_path, resizedOrig)
     
-#     place(filedir,B_path+'/depth/depth_result_mask/'+f_path,id,1)
+    place(filedir,B_path+'/depth/depth_result_mask/'+f_path,id,1)
     
-#     torch.cuda.empty_cache()
-#     return B_path+'/depth/output/'+f_path
+    torch.cuda.empty_cache()
+    return B_path+'/depth/output/'+f_path
 
-# def filter(input_list):
-#     print(input_list)
-#     processed = []
-#     for i in range(len(input_list)):
-#         processed.append(process(input_list[i],i))
+def filter(input_list):
+    print(input_list)
+    processed = []
+    for i in range(len(input_list)):
+        processed.append(process(input_list[i],i))
     
-#     print(processed)
+    print(processed)
 
-#     return final_stitch.stitch(processed)
+    return final_stitch.stitch(processed)
 
 
-# filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])
+filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])
 print("[*]DEPTH-ready to go")
