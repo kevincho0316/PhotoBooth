@@ -37,16 +37,16 @@ def api(id,type,file_dir):
     zip_file.close()
     
     
-    # files = {
-    #     'id': (None, id),
-    #     'type': (None, type),
-    #     'zip': open('deskF/%d.zip' % (id), 'rb'),
-    # }
+    files = {
+        'id': (None, id),
+        'type': (None, type),
+        'zip': open('desk/%d.zip' % (id), 'rb'),
+    }
 
-    # response = requests.post('http://104.197.148.203:5000/predict', files=files)
+    response = requests.post('http://34.112.218.202:5000/predict', files=files)
 
     Delete()
-    # return response
+    return response
 
 
 
