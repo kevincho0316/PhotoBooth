@@ -55,7 +55,7 @@ def api(id,type,file_dir):
         # 'zip': open('%d.zip' % (id), 'rb'),
     }
     print(files)
-    response = requests.post('http://34.69.119.251:5000/predict', files=files)
+    response = requests.post(']http://metash.p-e.kr/:5000/predict', files=files)
 
     print(str(response.status_code) + " | " + response.text)
     j=response.json()

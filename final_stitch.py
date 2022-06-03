@@ -38,7 +38,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import HorizontalBarsDrawer
 from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
 import socket
-ip = 'http://'+'34.69.119.251'+':8080'
+ip = 'http://'+'metash.p-e.kr'+':8080'
 
 def stitch(images_list):
     imgs = [Image.open(i) for i in images_list]

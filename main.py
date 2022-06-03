@@ -54,5 +54,5 @@ def predict():
 
 
 
-        return jsonify({'id': id, 'file': 'http://'+'34.69.119.251:8080'+'/'+output_file})
+        return jsonify({'id': id, 'file': 'http://'+'metash.p-e.kr:8080'+'/'+output_file})
         
