@@ -74,7 +74,7 @@ def stitch(images_list):
     plate.paste(img_merge,(paste_cor_x,paste_cor_y))
   
     out_dir = 'product/' + images_list[0].split('/')[-2].split('.')[0]+'.jpg'
-    
+    qr_dir = 'p/' + images_list[0].split('/')[-2].split('.')[0]+'.jpg'
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -82,7 +82,7 @@ def stitch(images_list):
         border=0.1,
         )
     # qr.add_data('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-    qr.add_data(ip+'/'+out_dir)
+    qr.add_data(ip+'/'+qr_dir)
 
     qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer())
     # img_2 = qr.make_image(image_factory=StyledPilImage, color_mask=RadialGradiantColorMask())

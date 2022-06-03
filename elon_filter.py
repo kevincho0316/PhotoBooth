@@ -29,12 +29,13 @@ def process(img, id,mode):
 
     background.paste(foreground,(round((bw/2 - m)), bh-fh),foreground)
     if mode == 0:
-        background.resize((980,720))
+        background.resize((1080,720))
         return pilImageToSurface(background)
     elif mode == 1:
         createFolder(B_path+'/elon/output/'+img.split('/')[-2].replace('.',''))
         out_dir = B_path+'/elon/output/'+img.split('/')[-2].replace('.','')+"/"+img.split('/')[-1].split('.')[0]+'.jpg'
         background = background.convert("RGB")
+        background.resize((1080,720))
         background.save(out_dir)
         return out_dir
 
