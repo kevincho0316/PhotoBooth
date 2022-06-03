@@ -1,36 +1,3 @@
-# from typing import final
-# import cv2
-
-# define a function for vertically 
-# concatenating images of different
-# widths 
-
-# def stitch(img_list, interpolation 
-#                    = cv2.INTER_CUBIC):
-#       # take minimum width
-
-#     out = '/contentproduct/'
-
-
-#     img_readed = []
-#     for img in img_list:
-#         img_readed.append(cv2.imread(img))
-
-#     w_min = min(img.shape[1] 
-#                 for img in img_readed)
-      
-#     # resizing images
-#     im_list_resize = [cv2.resize(img,
-#                       (w_min, int(img.shape[0] * w_min / img.shape[1])),
-#                                  interpolation = interpolation)
-#                       for img in img_readed]
-
-#     img_v_resize = cv2.vconcat(im_list_resize)
-#     # return final image
-#     out_dir = out + img_list[0].split('/')[-1].split('.')[0][0:-2]+'.jpg'
-#     cv2.imwrite(out_dir, img_v_resize)
-#     return out_dir
-
 
 from PIL import Image, ImageEnhance
 import qrcode
@@ -39,6 +6,21 @@ from qrcode.image.styles.moduledrawers.pil import HorizontalBarsDrawer
 from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
 import socket
 ip = 'http://'+'metash.p-e.kr'+':8080'
+
+def crop(im): # opend im 
+    new_width = 1080
+    new_height = 720
+    width, height = im.size   # Get dimensions
+
+    left = (width - new_width)/2
+    top = (height - new_height)/2
+    right = (width + new_width)/2
+    bottom = (height + new_height)/2
+
+    # Crop the center of the image
+    im = im.crop((left, top, right, bottom))
+    return im
+
 
 def stitch(images_list):
     imgs = [Image.open(i) for i in images_list]
@@ -50,6 +32,7 @@ def stitch(images_list):
 
     total_height = 0
     for i, img in enumerate(imgs):
+        img = crop(img)
         # If the image is larger than the minimum width, resize it
         if img.width > min_img_width:
             imgs[i] = img.resize((min_img_width, int(img.height / img.width * min_img_width)), Image.ANTIALIAS)
@@ -86,12 +69,12 @@ def stitch(images_list):
 
     qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer())
     # img_2 = qr.make_image(image_factory=StyledPilImage, color_mask=RadialGradiantColorMask())
-    qr_s = 669-552
+    qr_s = 140
     qr_img = qr_img.resize((qr_s,qr_s))
-    plate.paste(qr_img,(612-int(qr_s/2),3511))
+    plate.paste(qr_img,(612-int(qr_s/2),3462))
     final = plate.convert("RGB")
     final.save(out_dir)
-    return out_dir
+    return qr_dir
 
 
 

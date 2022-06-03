@@ -10,6 +10,7 @@ import time
 import zipfile
 import elon_filter
 import depth_filter
+import final_stitch
 from PIL import Image
 import ctypes
 
@@ -55,11 +56,12 @@ def api(id,type,file_dir):
         # 'zip': open('%d.zip' % (id), 'rb'),
     }
     print(files)
-    response = requests.post(']http://metash.p-e.kr/:5000/predict', files=files)
+    response = requests.post('http://metash.p-e.kr:5000/predict', files=files)
 
     print(str(response.status_code) + " | " + response.text)
     j=response.json()
     url = j['file']
+    print(url)
     urllib.request.urlretrieve(url, "desk/%d.jpg"% (id))
     return "desk/%d.jpg"% (id)
 
@@ -199,10 +201,13 @@ while True:
                 if types == 'elon':
                     pil_string_image = pygame.image.tostring(new_image,"RGBA",False)
                     img = Image.frombytes("RGBA",(web_x,web_y),pil_string_image)
+                    img = final_stitch.crop(img)
+                    # print(img.size)
                     new_image = elon_filter.process(img, (state-2), 0)
                 elif types == 'depth':
                     pil_string_image = pygame.image.tostring(new_image,"RGBA",False)
                     img = Image.frombytes("RGBA",(web_x,web_y),pil_string_image)
+                    img = final_stitch.crop(img)
                     new_image = depth_filter.place(img, img, state-2, 0)
                 
                 
@@ -213,7 +218,11 @@ while True:
                 pygame.display.update()
                 if key == 't':
                     key = ''
-                    pygame.image.save(image,'%d.png' % (state-1))
+                    image = pygame.transform.flip(image, True, False)
+                    pil_string_image_n = pygame.image.tostring(image,"RGBA",False)
+                    img2 = Image.frombytes("RGBA",(web_x,web_y),pil_string_image_n)
+                    img2 = final_stitch.crop(img2)
+                    img2.save('%d.png' % (state-1))
                     state += 1
                     if state == 6:
                         t_pass=True
