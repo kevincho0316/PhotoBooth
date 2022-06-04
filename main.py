@@ -41,7 +41,7 @@ def predict():
 
         os.remove(os.path.join(types, 'before', zip_f.filename))
 
-        
+        print("___________________________")
         print("[id:%s type:%s]______________"%(id,types))
 
         if types == 'elon':
@@ -52,7 +52,7 @@ def predict():
             output_file = arcane_filter.filter(sorted(glob(f'{output_zip}/*')))
         
         
-        print("___________________________")
+        
 
 
 

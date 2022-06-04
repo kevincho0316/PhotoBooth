@@ -13,3 +13,10 @@ sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
 <Context path="/p" docBase="/home/hellochs/PhotoBooth/product" reloadable="false" allowLinking="true"></Context>
 
 <Context path="" docBase="/user/local/" reloadable="false" allowLinking="false"></Context>
+
+
+
+
+
+https://jjeongil.tistory.com/1351
+

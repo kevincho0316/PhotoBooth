@@ -32,7 +32,7 @@ def stitch(images_list):
 
     total_height = 0
     for i, img in enumerate(imgs):
-        img = crop(img)
+        # img = crop(img)
         # If the image is larger than the minimum width, resize it
         if img.width > min_img_width:
             imgs[i] = img.resize((min_img_width, int(img.height / img.width * min_img_width)), Image.ANTIALIAS)

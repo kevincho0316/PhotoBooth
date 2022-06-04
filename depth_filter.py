@@ -1,6 +1,6 @@
 import cv2
 from PIL import Image
-# import torch
+import torch
 import numpy as np
 import final_stitch
 import depth_cut
