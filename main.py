@@ -42,7 +42,7 @@ def predict():
         os.remove(os.path.join(types, 'before', zip_f.filename))
 
         
-        print("[id:%d type:%s]______________"%(id,types))
+        print("[id:%s type:%s]______________"%(id,types))
 
         if types == 'elon':
             output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))

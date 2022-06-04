@@ -6,3 +6,4 @@ flask
 IPython
 timm
 pygame
+tqdm

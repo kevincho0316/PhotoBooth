@@ -116,7 +116,7 @@ def api(id,type,file_dir):
         
         # 'zip': open('%d.zip' % (id), 'rb'),
     }
-    print(files)
+    print('[id:%d type:%s]'%(id,types))
     response = requests.post('http://metash.p-e.kr:5000/predict', files=files)
 
     print(str(response.status_code) + " | " + response.text)
@@ -161,7 +161,7 @@ cam.start()
 
 key = ''
 t_pass = False
-api = False
+api_b = False
 escape = False
 state = 0
 id = 0
@@ -217,8 +217,8 @@ while True:
     # 키보드 입력 값,  문자 값 출력
     if key == 'q' :         # 'h' 키 이면 좌로 이동
         if state == 0:
-            print("___________________________")
-            print("[%d]"%id)
+            print("_____________________________________")
+            # print("[%d]"%id)
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
@@ -227,8 +227,8 @@ while True:
             state += 1
     elif key == 'w':       # 'j' 키 이면 아래로 이동
         if state == 0:
-            print("___________________________")
-            print("[%d]"%id)
+            print("_____________________________________")
+            # print("[%d]"%id)
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
@@ -237,8 +237,8 @@ while True:
             state += 1
     elif key == 'e':       # 'k' 키 이면 위로 이동
         if state == 0:
-            print("___________________________")
-            print("[%d]"%id)
+            print("_____________________________________")
+            # print("[%d]"%id)
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
@@ -249,7 +249,7 @@ while True:
     elif key == 't' or t_pass == True:
         t_pass = False
         if state == 6:
-            api = True
+            api_b = True
             merge(api(int(id), types, 'desk/'))
             
             back = pygame.image.load('client/process.png')
@@ -259,7 +259,7 @@ while True:
             Delete(id)
             back = pygame.image.load('client/first.png')
             print("___________________________")
-            api = False
+            api_b = False
             
             id +=1
         elif state >= 2:
