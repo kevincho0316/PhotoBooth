@@ -9,10 +9,11 @@ import serial
 import time
 import zipfile
 import elon_filter
-import depth_filter
 import final_stitch
 from PIL import Image
 import ctypes
+
+
 
 # py_serial = serial.Serial(
     
@@ -22,6 +23,65 @@ import ctypes
 #     # 보드 레이트 (통신 속도)
 #     baudrate=9600,
 # )
+
+data_list=[ ['depth/img/doge_mountain/background.png',600,0,(277, 70),'depth/img/doge_mountain/foreground.png'],
+            ['depth/img/light_travel/background.png',450,0,(330, 100),'depth/img/light_travel/foreground.png'],
+            ['depth/img/radioactive_pool/background.png',500,0,(190, 189),'depth/img/radioactive_pool/foreground.png'],
+            ['depth/img/to_the_moon/background.png',450,-15,(320, 35),'depth/img/to_the_moon/foreground.png'],
+            ]
+
+def pilImageToSurface(pilImage):
+    return pygame.image.fromstring(
+        pilImage.tobytes(), pilImage.size, pilImage.mode).convert()
+
+
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print('Error: Creating directory. ' + directory)
+
+def place(ori_img,mask_fd, id,mode):
+    if mode ==1:
+        mask = Image.open(mask_fd)
+        ori_img = Image.open(ori_img)
+    else:
+        mask = mask_fd
+
+        
+
+    foreground = Image.open(data_list[id-1][4])
+    background = Image.open(data_list[id-1][0])
+    
+    mask.thumbnail((data_list[id-1][1],data_list[id-1][1])) #한변의 최대 길이
+    fw, fh = mask.size
+    mask = mask.rotate(data_list[id-1][2],expand=True)
+
+    ori_img.thumbnail((data_list[id-1][1],data_list[id-1][1]))
+    fw, fh = ori_img.size
+    ori_img = ori_img.rotate(data_list[id-1][2],expand=True)
+    
+
+
+    
+    
+
+    background.paste(ori_img,data_list[id-1][3],mask)
+    background.paste(foreground,(0,0),foreground)
+    # print(m)
+    if mode == 0:
+        return pilImageToSurface(background)
+    elif mode == 1:
+        createFolder(B_path +'/depth/output/'+mask_fd.split('/')[-2])
+        out_dir = B_path +'/depth/output/'+mask_fd.split('/')[-2]+'/'+mask_fd.split('/')[-1].split('.')[0]+'.jpg'
+
+        background = background.convert("RGB")
+        background.save(out_dir)
+        return out_dir
+
+
+
 def Delete(id):
     os.remove('%d.zip' % (id))
     os.remove("desk/%d.jpg"% (id))
@@ -39,13 +99,14 @@ def merge(img):
     new_image.paste(image2,(image1_size[0],0))
     new_image.save(img)
     
-
-def api(id,type,file_dir):
+def zip(id):
     zip_file = zipfile.ZipFile('%d.zip' % (id), "w")  # "w": write 모드
     for i in range(4):
         zip_file.write(str(i+1)+'.png', compress_type=zipfile.ZIP_DEFLATED)
 
     zip_file.close()
+    
+def api(id,type,file_dir):
     
     
     files = {
@@ -83,8 +144,9 @@ clock = pygame.time.Clock()
 pos_x = 400
 pos_y = 100
 os.environ['SDL_VIDEO_WINDOW_POS'] = '%i,%i' % (pos_x,pos_y)
-os.environ['SDL_VIDEO_CENTERED'] = '0'
+os.environ['SDL_VIDEO_CENTERED'] = '0' #frequency, size, channels, buffersize
 pygame.init()
+pygame.mixer.init()
 pygame.camera.init()
 
 win_x=1280
@@ -99,6 +161,8 @@ cam.start()
 
 key = ''
 t_pass = False
+api = False
+escape = False
 state = 0
 id = 0
 
@@ -151,8 +215,10 @@ while True:
 
 
     # 키보드 입력 값,  문자 값 출력
-    if key == 'q':         # 'h' 키 이면 좌로 이동
+    if key == 'q' :         # 'h' 키 이면 좌로 이동
         if state == 0:
+            print("___________________________")
+            print("[%d]"%id)
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
@@ -161,6 +227,8 @@ while True:
             state += 1
     elif key == 'w':       # 'j' 키 이면 아래로 이동
         if state == 0:
+            print("___________________________")
+            print("[%d]"%id)
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
@@ -169,6 +237,8 @@ while True:
             state += 1
     elif key == 'e':       # 'k' 키 이면 위로 이동
         if state == 0:
+            print("___________________________")
+            print("[%d]"%id)
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
@@ -179,37 +249,38 @@ while True:
     elif key == 't' or t_pass == True:
         t_pass = False
         if state == 6:
-            
-            merge(api(id, types, 'desk/'))
+            api = True
+            merge(api(int(id), types, 'desk/'))
             
             back = pygame.image.load('client/process.png')
-            # print
             state += 1
         elif state == 7:
             state = 0
-            
             Delete(id)
             back = pygame.image.load('client/first.png')
+            print("___________________________")
+            api = False
             
             id +=1
         elif state >= 2:
             key = ''
-            while True:        
+            while True:    
+                if escape==True:
+                    escape=False
+                    break    
                 image = cam.get_image()        
                 new_image = pygame.transform.flip(image, True, False)
+
+                pil_string_image = pygame.image.tostring(new_image,"RGBA",False)
+                img = Image.frombytes("RGBA",(web_x,web_y),pil_string_image)
+                img = final_stitch.crop(img)
                 
                 if types == 'elon':
-                    pil_string_image = pygame.image.tostring(new_image,"RGBA",False)
-                    img = Image.frombytes("RGBA",(web_x,web_y),pil_string_image)
-                    img = final_stitch.crop(img)
-                    # print(img.size)
                     new_image = elon_filter.process(img, (state-2), 0)
                 elif types == 'depth':
-                    pil_string_image = pygame.image.tostring(new_image,"RGBA",False)
-                    img = Image.frombytes("RGBA",(web_x,web_y),pil_string_image)
-                    img = final_stitch.crop(img)
-                    new_image = depth_filter.place(img, img, state-2, 0)
-                
+                    new_image = place(img, img, state-2, 0)
+                else:
+                    new_image=pilImageToSurface(img)
                 
                 screen.fill((255, 255, 255))
                 screen.blit(new_image,((win_x/2-540),(win_y/2)-405))        
@@ -218,6 +289,13 @@ while True:
                 pygame.display.update()
                 if key == 't':
                     key = ''
+                    # s= pygame.mixer.Sound("capture.mp3")
+                    # pygame.mixer.play()
+                    
+                    screen.fill((255, 255, 255))
+                    screen.blit(new_image,((win_x/2-540),(win_y/2)-405))
+                    pygame.display.update()
+                    pygame.time.wait(412)
                     image = pygame.transform.flip(image, True, False)
                     pil_string_image_n = pygame.image.tostring(image,"RGBA",False)
                     img2 = Image.frombytes("RGBA",(web_x,web_y),pil_string_image_n)
@@ -226,17 +304,30 @@ while True:
                     state += 1
                     if state == 6:
                         t_pass=True
+                        back = pygame.image.load('client/zipping.png')
+                        screen.fill((255, 255, 255))
+                        screen.blit(back, ((win_x/2-540),(win_y/2)-405)) # 배경 그리기(background 가 표시되는 위치)
+                        pygame.display.update()
+                        zip(id)
                         back = pygame.image.load('client/loading.png')
+                        
                         break
 
                 for event in pygame.event.get():                
                     if event.type == pygame.KEYDOWN:
                         if event.key==K_t:
                             key = 't'
+                        elif event.key==K_z:
+                            state = 0
+                            back = pygame.image.load('client/first.png')
+                            
+                            print("__________ESCAPE___________")
+                            escape=True
+                            break
                     if event.type == pygame.QUIT:                        
                         sys.exit()
 
-    
+   
 
     key = ''
     for event in pygame.event.get():
@@ -249,7 +340,12 @@ while True:
                 key = 'e'
             elif event.key==K_t:
                 key = 't'
-            elif event.key ==K_f:  # f 키를 눌렀을 때
+            elif event.key==K_z:
+                state = 0
+                back = pygame.image.load('client/first.png')
+                
+                print("__________ESCAPE___________")
+            elif event.key==K_f:  # f 키를 눌렀을 때
                 user32 = ctypes.windll.user32
                 screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)  # 해상도 구하기
                 surface = pygame.display.set_mode(screensize, FULLSCREEN)  # 전체화면으로 전환
@@ -258,6 +354,8 @@ while True:
             pygame.quit() 
             exit(0)
     screen.fill((255, 255, 255))
+    infoObject = pygame.display.Info()
+    (win_x,win_y)=(infoObject.current_w, infoObject.current_h)
     screen.blit(back, ((win_x/2-540),(win_y/2)-405)) # 배경 그리기(background 가 표시되는 위치)
     pygame.display.update()
 

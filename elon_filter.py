@@ -3,6 +3,7 @@ from PIL import Image
 import final_stitch
 import os
 import pygame
+from tqdm import tqdm
 B_path= os.path.dirname(os.path.abspath(__file__))
 
 foreground_list=['elon/foregrounds.png','elon/foregrounds.png','elon/foregrounds.png','elon/foregrounds.png']
@@ -48,12 +49,12 @@ def createFolder(directory):
 
 
 def filter(input_list):
-    print(input_list)
+    # print(input_list)
     processed = []
-    for i in range(len(input_list)):
+    for i in tqdm(range(len(input_list))):
         processed.append(process(input_list[i],i,1))
     
-    print(processed)
+    # print(processed)
 
     return final_stitch.stitch(processed)
 

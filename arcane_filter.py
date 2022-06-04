@@ -13,6 +13,11 @@ from torchvision import transforms
 import torch, PIL
 import final_stitch
 import os
+from tqdm import tqdm
+import os
+from glob import glob
+
+
 B_path= os.path.dirname(os.path.abspath(__file__))
 
 
@@ -132,11 +137,6 @@ model = torch.jit.load(model_path).eval().cuda().half()
 
 #setup colab interface
 
-from IPython.display import clear_output 
-from IPython.display import display
-import os
-from glob import glob
-
 
 def fit(img,maxsize=512):
   maxdim = max(*img.size)
@@ -186,7 +186,7 @@ def process(img, id):
 def filter(input_list):
     print(input_list)
     processed = []
-    for i in range(len(input_list)):
+    for i in tqdm(range(len(input_list))):
         processed.append(process(input_list[i],i))
     
     print(processed)
