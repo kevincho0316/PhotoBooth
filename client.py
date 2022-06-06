@@ -84,7 +84,7 @@ def place(ori_img,mask_fd, id,mode):
 
 def Delete(id):
     os.remove('%d.zip' % (id))
-    os.remove("desk/%d.jpg"% (id))
+    # os.remove("desk/%d.jpg"% (id))
     
     for i in range(4):
         os.remove('%d.png' % (i+1))
@@ -108,7 +108,7 @@ def zip(id):
     
 def api(id,type,file_dir):
     
-    
+    # print(type)
     files = {
         'id': (None, id),
         'type': (None, type),
@@ -123,7 +123,7 @@ def api(id,type,file_dir):
     j=response.json()
     url = j['file']
     print(url)
-    urllib.request.urlretrieve(url, "desk/%d.jpg"% (id))
+    # urllib.request.urlretrieve(url, "desk/%d.jpg"% (id))
     return "desk/%d.jpg"% (id)
 
 
@@ -210,9 +210,7 @@ while True:
 
 
 
-
-
-
+    # print(state)
 
     # 키보드 입력 값,  문자 값 출력
     if key == 'q' :         # 'h' 키 이면 좌로 이동
@@ -224,6 +222,10 @@ while True:
         elif state == 1:
             types = 'elon'
             back = pygame.image.load('client/%s.png'%(types))
+            state += 2
+        elif state == 2:
+            types = 'anime'
+            back = pygame.image.load('client/%s.png'%(types))
             state += 1
     elif key == 'w':       # 'j' 키 이면 아래로 이동
         if state == 0:
@@ -234,7 +236,7 @@ while True:
         elif state == 1:
             types = 'depth'
             back = pygame.image.load('client/%s.png'%(types))
-            state += 1
+            state += 2
     elif key == 'e':       # 'k' 키 이면 위로 이동
         if state == 0:
             print("_____________________________________")
@@ -242,19 +244,23 @@ while True:
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
+            back = pygame.image.load('client/cartoon choose.png')
+            state += 1
+        elif state == 2:
             types = 'arcane'
             back = pygame.image.load('client/%s.png'%(types))
             state += 1
-   
+            
     elif key == 't' or t_pass == True:
         t_pass = False
-        if state == 6:
+        if state == 7:
             api_b = True
-            merge(api(int(id), types, 'desk/'))
+            # merge(api(int(id), types, 'desk/'))
+            api(int(id), types, 'desk/')
             
             back = pygame.image.load('client/process.png')
             state += 1
-        elif state == 7:
+        elif state == 8:
             state = 0
             Delete(id)
             back = pygame.image.load('client/first.png')
@@ -262,7 +268,7 @@ while True:
             api_b = False
             
             id +=1
-        elif state >= 2:
+        elif state >= 3:
             key = ''
             while True:    
                 if escape==True:
@@ -276,15 +282,15 @@ while True:
                 img = final_stitch.crop(img)
                 
                 if types == 'elon':
-                    new_image = elon_filter.process(img, (state-2), 0)
+                    new_image = elon_filter.process(img, (state-3), 0)
                 elif types == 'depth':
-                    new_image = place(img, img, state-2, 0)
+                    new_image = place(img, img, state-3, 0)
                 else:
                     new_image=pilImageToSurface(img)
                 
                 screen.fill((255, 255, 255))
                 screen.blit(new_image,((win_x/2-540),(win_y/2)-405))        
-                screen.blit(pygame.image.load('client/%d.png' % (state-1)),((win_x/2-540),(win_y/2)-405))
+                screen.blit(pygame.image.load('client/%d.png' % (state-2)),((win_x/2-540),(win_y/2)-405))
                 pygame.display.flip()        
                 pygame.display.update()
                 if key == 't':
@@ -300,9 +306,9 @@ while True:
                     pil_string_image_n = pygame.image.tostring(image,"RGBA",False)
                     img2 = Image.frombytes("RGBA",(web_x,web_y),pil_string_image_n)
                     img2 = final_stitch.crop(img2)
-                    img2.save('%d.png' % (state-1))
+                    img2.save('%d.png' % (state-2))
                     state += 1
-                    if state == 6:
+                    if state == 7:
                         t_pass=True
                         back = pygame.image.load('client/zipping.png')
                         screen.fill((255, 255, 255))

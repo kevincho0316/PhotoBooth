@@ -41,7 +41,7 @@ def predict():
 
         os.remove(os.path.join(types, 'before', zip_f.filename))
 
-        print("___________________________")
+        print("_______________________________")
         print("[id:%s type:%s]______________"%(id,types))
 
         if types == 'elon':
