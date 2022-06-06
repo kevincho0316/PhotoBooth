@@ -5,11 +5,11 @@ import os
 import elon_filter
 import arcane_filter
 import depth_filter
-import socket
-
+import anime_filter
 
 # from torchvision import models
 # import torchvision.transforms as transforms
+import socket
 from PIL import Image
 from flask import Flask, jsonify, request
 from flask import render_template
@@ -50,6 +50,8 @@ def predict():
             output_file = depth_filter.filter(sorted(glob(f'{output_zip}/*')))
         elif types == 'arcane':
             output_file = arcane_filter.filter(sorted(glob(f'{output_zip}/*')))
+        elif types == 'anime':
+            output_file = anime_filter.filter(sorted(glob(f'{output_zip}/*')))
         
         
         

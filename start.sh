@@ -13,6 +13,12 @@ mkdir -p arcane/before
 mkdir -p arcane/in
 mkdir -p arcane/output
 
+
+mkdir -p anime/before
+mkdir -p anime/output
+
+
+
 sudo apt install wget
 wget https://github.com/Sxela/ArcaneGAN/releases/download/v0.4/ArcaneGANv0.4.jit
 sudo apt install python3-pip
