@@ -8,8 +8,10 @@ import os
 import serial
 import time
 import zipfile
+
 import elon_filter
 import final_stitch
+import printer
 from PIL import Image
 import ctypes
 
@@ -256,9 +258,9 @@ while True:
         if state == 7:
             api_b = True
             # merge(api(int(id), types, 'desk/'))
-            api(int(id), types, 'desk/')
-            
+            fileout_name=api(int(id), types, 'desk/')
             back = pygame.image.load('client/process.png')
+            printer.print_pic('LG LIP2250', fileout_name)           #프린터 설정
             state += 1
         elif state == 8:
             state = 0
