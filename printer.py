@@ -1,4 +1,4 @@
-import win32ui, win32con
+import win32ui, win32con, win32print
 from PIL import Image, ImageWin
 
 def print_pic(printer_name,filename):
@@ -9,8 +9,10 @@ def print_pic(printer_name,filename):
         print("error")
         return
 
+
     hdc = win32ui.CreateDC()
     hdc.CreatePrinterDC(printer_name)
+    
 
     horzres = hdc.GetDeviceCaps(win32con.HORZRES)
     vertres = hdc.GetDeviceCaps(win32con.VERTRES)
@@ -42,7 +44,7 @@ def print_pic(printer_name,filename):
 
     #map image size to page size
     hdc.SetMapMode(win32con.MM_ISOTROPIC)
-    hdc.SetViewportExt((horzres, vertres));
+    hdc.SetViewportExt((horzres, vertres))
     hdc.SetWindowExt((max_width, max_height))
 
     #offset image so it is centered horizontally
@@ -60,7 +62,7 @@ def print_pic(printer_name,filename):
     hdc.EndDoc()
     hdc.DeleteDC()
 
-    print('%s-sucess'%(filename))
+    print('%s-Added'%(filename))
     # print( 'Debug info:' )
     # print( 'Landscape: %d' % landscape )
     # print( 'horzres: %d' % horzres )
@@ -75,3 +77,5 @@ def print_pic(printer_name,filename):
     # print( 'offset_x: %d' % offset_x )
     # print( 'offset_y: %d' % offset_y )
 
+# print_pic('LG LIP2250', 'C:/Users/kevin/Desktop/photobooth/PhotoBooth/desk/0.jpg')           #프린터 설정
+            

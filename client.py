@@ -100,6 +100,7 @@ def merge(img):
     new_image.paste(image1,(0,0))
     new_image.paste(image2,(image1_size[0],0))
     new_image.save(img)
+    return img
     
 def zip(id):
     zip_file = zipfile.ZipFile('%d.zip' % (id), "w")  # "w": write 모드
@@ -125,7 +126,7 @@ def api(id,type,file_dir):
     j=response.json()
     url = j['file']
     print(url)
-    # urllib.request.urlretrieve(url, "desk/%d.jpg"% (id))
+    urllib.request.urlretrieve(url, "desk/%d.jpg"% (id))
     return "desk/%d.jpg"% (id)
 
 
@@ -227,7 +228,7 @@ while True:
             state += 2
         elif state == 2:
             types = 'anime'
-            back = pygame.image.load('client/%s.png'%(types))
+            back = pygame.image.load('client/%s.png'%('depth'))
             state += 1
     elif key == 'w':       # 'j' 키 이면 아래로 이동
         if state == 0:
@@ -257,8 +258,8 @@ while True:
         t_pass = False
         if state == 7:
             api_b = True
-            # merge(api(int(id), types, 'desk/'))
-            fileout_name=api(int(id), types, 'desk/')
+            fileout_name=merge(api(int(id), types, 'desk/'))
+            # fileout_name=api(int(id), types, 'desk/')
             back = pygame.image.load('client/process.png')
             printer.print_pic('LG LIP2250', fileout_name)           #프린터 설정
             state += 1
