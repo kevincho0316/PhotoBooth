@@ -1,4 +1,5 @@
 
+from re import template
 import requests
 import urllib.request
 import pygame ,sys
@@ -109,12 +110,13 @@ def zip(id):
 
     zip_file.close()
     
-def api(id,type,file_dir):
+def api(id,type,temp,file_dir):
     
     # print(type)
     files = {
         'id': (None, id),
         'type': (None, type),
+        'temp': (None, type),
         'zip': open('%d.zip' % (id), 'rb'),
         
         # 'zip': open('%d.zip' % (id), 'rb'),
@@ -257,13 +259,62 @@ while True:
     elif key == 't' or t_pass == True:
         t_pass = False
         if state == 7:
+            key = ''
+            view_state=1
+            while True:    
+                if escape==True:
+                    escape=False
+                    break    
+                
+              
+                screen.fill((255, 255, 255))
+                screen.blit(pygame.image.load('client/temp-%d.png' % (view_state)),((win_x/2-540),(win_y/2)-405))
+                      
+                pygame.display.update()
+                if key == 'w':
+                    key = ''
+                    
+                    state = 8
+                elif key == 'q':
+                    key = ''
+                    if view_state != 5:
+                        view_state += 1
+                elif key == 'e':
+                    key = ''
+                    if view_state != 1:
+                        view_state -= 1
+                if state == 8:
+                    template_n = view_state
+                    break
+                    
+                    
+                    
+
+                for event in pygame.event.get():                
+                    if event.type == pygame.KEYDOWN:
+                        if event.key==K_q:
+                            key = 'q'
+                        elif event.key==K_w:
+                            key = 'w'
+                        elif event.key==K_e:
+                            key = 'e'
+                        elif event.key==K_z:
+                            state = 0
+                            back = pygame.image.load('client/first.png')
+                            
+                            print("__________ESCAPE___________")
+                            escape=True
+                            break
+                    if event.type == pygame.QUIT:                        
+                        sys.exit()
+        if state == 8:
             api_b = True
-            fileout_name=merge(api(int(id), types, 'desk/'))
+            fileout_name=merge(api(int(id), types,template_n, 'desk/'))
             # fileout_name=api(int(id), types, 'desk/')
             back = pygame.image.load('client/process.png')
             printer.print_pic('LG LIP2250', fileout_name)           #프린터 설정
             state += 1
-        elif state == 8:
+        elif state == 9:
             state = 0
             Delete(id)
             back = pygame.image.load('client/first.png')

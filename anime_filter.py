@@ -35,15 +35,15 @@ def createFolder(directory):
         print('Error: Creating directory. ' + directory)
 
 
-def filter(input_list):
+def filter(input_list,temp):
     # print(input_list)
     processed = []
     for i in tqdm(range(len(input_list))):
-        processed.append(process(input_list[i]))
+        processed.append(process(input_list[i],i,1))
     
     # print(processed)
 
-    return final_stitch.stitch(processed)
+    return final_stitch.stitch(processed,temp)
 
 def crop(im): # opend im 
     new_width = 1080

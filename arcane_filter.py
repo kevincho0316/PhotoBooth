@@ -185,15 +185,15 @@ def process(img, id):
     # return f
 
 
-def filter(input_list):
+def filter(input_list,temp):
     # print(input_list)
     processed = []
     for i in tqdm(range(len(input_list))):
-        processed.append(process(input_list[i],i))
+        processed.append(process(input_list[i],i,1))
     
     # print(processed)
 
-    return final_stitch.stitch(processed)
+    return final_stitch.stitch(processed,temp)
 
 # filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])
 print("[*]ARCANE-ready to go")

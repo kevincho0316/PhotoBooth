@@ -31,6 +31,7 @@ def predict():
     if request.method == 'POST':
         id = request.form.get('id')
         types = request.form.get('type')
+        temp = request.form.get('temp')
         zip_f = request.files['zip']     
         input_file = os.path.join(B_path, types, 'before', zip_f.filename)
         output_zip = os.path.join(B_path, types, 'before', zip_f.filename[:-3])
@@ -45,13 +46,13 @@ def predict():
         print("[id:%s type:%s]______________"%(id,types))
 
         if types == 'elon':
-            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')))
+            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
         elif types == 'depth':
-            output_file = depth_filter.filter(sorted(glob(f'{output_zip}/*')))
+            output_file = depth_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
         elif types == 'arcane':
-            output_file = arcane_filter.filter(sorted(glob(f'{output_zip}/*')))
+            output_file = arcane_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
         elif types == 'anime':
-            output_file = anime_filter.filter(sorted(glob(f'{output_zip}/*')))
+            output_file = anime_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
         
         
         

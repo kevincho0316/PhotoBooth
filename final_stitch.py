@@ -6,7 +6,7 @@ from qrcode.image.styles.moduledrawers.pil import HorizontalBarsDrawer
 from qrcode.image.styles.colormasks import HorizontalGradiantColorMask
 import socket
 ip = 'http://'+'metash.p-e.kr'+':8080'
-
+qr_cor = [(612-int(140/2),3462),]
 def crop(im): # opend im 
     new_width = 1080
     new_height = 720
@@ -22,9 +22,10 @@ def crop(im): # opend im
     return im
 
 
-def stitch(images_list):
+def stitch(images_list,temp):
     imgs = [Image.open(i) for i in images_list]
-    plate = Image.open('final_stitch/plate-v3-f.png')
+    plate = Image.open('final_stitch/plate.png')
+    templet = Image.open('final_stitch/plate-v3-%s.png'%(temp))
 
     # If you're using an older version of Pillow, you might have to use .size[0] instead of .width
     # and later on, .size[1] instead of .height
@@ -55,6 +56,7 @@ def stitch(images_list):
     paste_cor_y = int((((bottom-top)/2)+top)-(img_merge.height/2))
     paste_cor_x = int((plate.width/2)-(img_merge.width/2))
     plate.paste(img_merge,(paste_cor_x,paste_cor_y))
+    plate.paste(templet,(0,0),templet)
   
     out_dir = 'product/' + images_list[0].split('/')[-2].split('.')[0]+'.jpg'
     qr_dir = 'p/' + images_list[0].split('/')[-2].split('.')[0]+'.jpg'
@@ -69,12 +71,14 @@ def stitch(images_list):
 
     qr_img = qr.make_image(image_factory=StyledPilImage, module_drawer=HorizontalBarsDrawer())
     # img_2 = qr.make_image(image_factory=StyledPilImage, color_mask=RadialGradiantColorMask())
-    qr_s = 140
+    qr_s = 140 
     qr_img = qr_img.resize((qr_s,qr_s))
-    plate.paste(qr_img,(612-int(qr_s/2),3462))
+    plate.paste(qr_img,qr_cor[int(temp)-1])
     final = plate.convert("RGB")
     final.save(out_dir)
     return qr_dir
+
+
 
 
 
