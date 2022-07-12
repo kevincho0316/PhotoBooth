@@ -21,11 +21,15 @@ import ctypes
 # py_serial = serial.Serial(
     
 #     # Window
-#     port='COM3',
+#     port='COM4',
     
 #     # 보드 레이트 (통신 속도)
 #     baudrate=9600,
 # )
+
+
+black = False ########################################컬러 떨어질 경우###############
+
 
 data_list=[ ['depth/img/doge_mountain/background.png',600,0,(277, 70),'depth/img/doge_mountain/foreground.png'],
             ['depth/img/light_travel/background.png',450,0,(330, 100),'depth/img/light_travel/foreground.png'],
@@ -116,12 +120,12 @@ def api(id,type,temp,file_dir):
     files = {
         'id': (None, id),
         'type': (None, type),
-        'temp': (None, type),
+        'temp': (None, temp),
         'zip': open('%d.zip' % (id), 'rb'),
         
         # 'zip': open('%d.zip' % (id), 'rb'),
     }
-    print('[id:%d type:%s]'%(id,types))
+    print('[id:%d type:%s temp:%s]'%(id,types,temp))
     response = requests.post('http://metash.p-e.kr:5000/predict', files=files)
 
     print(str(response.status_code) + " | " + response.text)
@@ -195,21 +199,15 @@ while True:
         os.makedirs('desk/')
     clock.tick(60)
 
-
-    # commend = ('k')
-    
-    # py_serial.write(commend.encode())
-
-    
     # if py_serial.readable():
         
     #     # 들어온 값이 있으면 값을 한 줄 읽음 (BYTE 단위로 받은 상태)
     #     # BYTE 단위로 받은 response 모습 : b'\xec\x97\x86\xec\x9d\x8c\r\n'
     #     response = py_serial.readline()
-        
+    #     if response != b'\r\n':
     #     # 디코딩 후, 출력 (가장 끝의 \n을 없애주기위해 슬라이싱 사용)
-    #     print(response[:len(response)-1].decode())
-    #     key = response[:len(response)-1].decode()[0]
+    #         # print(response[:len(response)-1].decode())
+    #         key = response[:len(response)-1].decode()[0]
     # else:
     #     key = ''              
 
@@ -225,12 +223,58 @@ while True:
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
-            types = 'elon'
-            back = pygame.image.load('client/%s.png'%(types))
+            key = ''
+            while True:  
+                # if py_serial.readable():
+        
+                #     # 들어온 값이 있으면 값을 한 줄 읽음 (BYTE 단위로 받은 상태)
+                #     # BYTE 단위로 받은 response 모습 : b'\xec\x97\x86\xec\x9d\x8c\r\n'
+                #     response = py_serial.readline()
+                #     if response != b'\r\n':
+                #     # 디코딩 후, 출력 (가장 끝의 \n을 없애주기위해 슬라이싱 사용)
+                #         print(response[:len(response)-1].decode())
+                #         key = response[:len(response)-1].decode()[0]
+                # else:
+                #     key = ''   
+                if escape==True:
+                    escape=False
+                    break    
+                
+              
+                screen.fill((255, 255, 255))
+                screen.blit(pygame.image.load('client/elon choose.png'),((win_x/2-540),(win_y/2)-405))
+                      
+                pygame.display.update()
+                if key == 'q':
+                    types = 'elon'
+                    break
+                elif key == 'w':
+                    types = 'rupi'
+                    break
+                elif key == 'e':
+                    types = 'meme'
+                    break
+                for event in pygame.event.get():                
+                    if event.type == pygame.KEYDOWN:
+                        if event.key==K_q:
+                            key = 'q'
+                        elif event.key==K_w:
+                            key = 'w'
+                        elif event.key==K_e:
+                            key = 'e'
+                        elif event.key==K_z:
+                            state = 0
+                            back = pygame.image.load('client/first.png')
+                            
+                            print("__________ESCAPE___________")
+                            escape=True
+                            break
+            
+            back = pygame.image.load('client/%s.png'%('elon'))
             state += 2
         elif state == 2:
             types = 'anime'
-            back = pygame.image.load('client/%s.png'%('depth'))
+            back = pygame.image.load('client/%s.png'%(types))
             state += 1
     elif key == 'w':       # 'j' 키 이면 아래로 이동
         if state == 0:
@@ -239,8 +283,54 @@ while True:
             back = pygame.image.load('client/second.png')
             state += 1
         elif state == 1:
-            types = 'depth'
-            back = pygame.image.load('client/%s.png'%(types))
+            key = ''
+            while True:  
+                # if py_serial.readable():
+        
+                #     # 들어온 값이 있으면 값을 한 줄 읽음 (BYTE 단위로 받은 상태)
+                #     # BYTE 단위로 받은 response 모습 : b'\xec\x97\x86\xec\x9d\x8c\r\n'
+                #     response = py_serial.readline()
+                #     if response != b'\r\n':
+                #     # 디코딩 후, 출력 (가장 끝의 \n을 없애주기위해 슬라이싱 사용)
+                #         print(response[:len(response)-1].decode())
+                #         key = response[:len(response)-1].decode()[0]
+                # else:
+                #     key = ''   
+                if escape==True:
+                    escape=False
+                    break    
+                
+              
+                screen.fill((255, 255, 255))
+                screen.blit(pygame.image.load('client/depth choose.png'),((win_x/2-540),(win_y/2)-405))
+                      
+                pygame.display.update()
+                if key == 'q':
+                    types = 'depth-elon'
+                    break
+                elif key == 'w':
+                    types = 'depth-flower'
+                    break
+                elif key == 'e':
+                    types = 'depth-pop'
+                    break
+                for event in pygame.event.get():                
+                    if event.type == pygame.KEYDOWN:
+                        if event.key==K_q:
+                            key = 'q'
+                        elif event.key==K_w:
+                            key = 'w'
+                        elif event.key==K_e:
+                            key = 'e'
+                        elif event.key==K_z:
+                            state = 0
+                            back = pygame.image.load('client/first.png')
+                            
+                            print("__________ESCAPE___________")
+                            escape=True
+                            break
+            
+            back = pygame.image.load('client/%s.png'%('depth'))
             state += 2
     elif key == 'e':       # 'k' 키 이면 위로 이동
         if state == 0:
@@ -261,7 +351,18 @@ while True:
         if state == 7:
             key = ''
             view_state=1
-            while True:    
+            while True:  
+                # if py_serial.readable():
+        
+                #     # 들어온 값이 있으면 값을 한 줄 읽음 (BYTE 단위로 받은 상태)
+                #     # BYTE 단위로 받은 response 모습 : b'\xec\x97\x86\xec\x9d\x8c\r\n'
+                #     response = py_serial.readline()
+                #     if response != b'\r\n':
+                #     # 디코딩 후, 출력 (가장 끝의 \n을 없애주기위해 슬라이싱 사용)
+                #         print(response[:len(response)-1].decode())
+                #         key = response[:len(response)-1].decode()[0]
+                # else:
+                #     key = ''   
                 if escape==True:
                     escape=False
                     break    
@@ -312,7 +413,7 @@ while True:
             fileout_name=merge(api(int(id), types,template_n, 'desk/'))
             # fileout_name=api(int(id), types, 'desk/')
             back = pygame.image.load('client/process.png')
-            printer.print_pic('LG LIP2250', fileout_name)           #프린터 설정
+            printer.print_pic('LG LIP2250', fileout_name,black)           #프린터 설정
             state += 1
         elif state == 9:
             state = 0
@@ -325,6 +426,18 @@ while True:
         elif state >= 3:
             key = ''
             while True:    
+                # if py_serial.readable():
+        
+                #     # 들어온 값이 있으면 값을 한 줄 읽음 (BYTE 단위로 받은 상태)
+                #     # BYTE 단위로 받은 response 모습 : b'\xec\x97\x86\xec\x9d\x8c\r\n'
+                #     response = py_serial.readline()
+                #     if response != b'\r\n':
+                #     # 디코딩 후, 출력 (가장 끝의 \n을 없애주기위해 슬라이싱 사용)
+                #         print(response[:len(response)-1].decode())
+                #         key = response[:len(response)-1].decode()[0]
+                # else:
+                #     key = '' 
+
                 if escape==True:
                     escape=False
                     break    
@@ -413,6 +526,8 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit() 
             exit(0)
+
+
     screen.fill((255, 255, 255))
     infoObject = pygame.display.Info()
     (win_x,win_y)=(infoObject.current_w, infoObject.current_h)

@@ -1,7 +1,7 @@
 import win32ui, win32con, win32print
 from PIL import Image, ImageWin
 
-def print_pic(printer_name,filename):
+def print_pic(printer_name,filename,mode):
 
     try:
         img = Image.open(filename, 'r')
@@ -9,6 +9,8 @@ def print_pic(printer_name,filename):
         print("error")
         return
 
+    if mode == True:
+        img = img.convert('L')
 
     hdc = win32ui.CreateDC()
     hdc.CreatePrinterDC(printer_name)
