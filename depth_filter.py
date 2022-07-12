@@ -14,11 +14,23 @@ B_path= os.path.dirname(os.path.abspath(__file__))
 #######################
 # process('/content/gfdud33u33.jpg', 1 )
 ##########################
-data_list=[ ['depth/img/doge_mountain/background.png',600,0,(277, 70),'depth/img/doge_mountain/foreground.png'],
+data_list=[[['depth/img/doge_mountain/background.png',600,0,(277, 70),'depth/img/doge_mountain/foreground.png'],
             ['depth/img/light_travel/background.png',450,0,(330, 100),'depth/img/light_travel/foreground.png'],
             ['depth/img/radioactive_pool/background.png',500,0,(190, 189),'depth/img/radioactive_pool/foreground.png'],
             ['depth/img/to_the_moon/background.png',450,-15,(320, 35),'depth/img/to_the_moon/foreground.png'],
+            ],
+            [['depth/flower/1.png',600,0,(277, 70),'depth/flower/1f.png'],
+            ['depth/flower/2.png',600,0,(277, 70),'depth/flower/2f.png'],
+            ['depth/flower/3.png',600,0,(277, 70),'depth/flower/3f.png'],
+            ['depth/flower/4.png',600,0,(277, 70),'depth/flower/4f.png'],
+            ],
+            [['depth/pop/1.png',600,0,(277, 70),'depth/pop/1f.png'],
+            ['depth/pop/2.png',600,0,(277, 70),'depth/pop/2f.png'],
+            ['depth/pop/3.png',600,0,(277, 70),'depth/pop/3f.png'],
+            ['depth/pop/4.png',600,0,(277, 70),'depth/pop/4f.png'],
             ]
+            ]
+
 
 def pilImageToSurface(pilImage):
     return pygame.image.fromstring(
@@ -32,7 +44,7 @@ def createFolder(directory):
     except OSError:
         print('Error: Creating directory. ' + directory)
 
-def place(ori_img,mask_fd, id,mode):
+def place(ori_img,mask_fd, id,mode,mode_d):
     if mode ==1:
         mask = Image.open(mask_fd)
         ori_img = Image.open(ori_img)
@@ -44,20 +56,20 @@ def place(ori_img,mask_fd, id,mode):
     foreground = Image.open(data_list[id-1][4])
     background = Image.open(data_list[id-1][0])
     
-    mask.thumbnail((data_list[id-1][1],data_list[id-1][1])) #한변의 최대 길이
+    mask.thumbnail((data_list[mode_d][id-1][1],data_list[mode_d][id-1][1])) #한변의 최대 길이
     fw, fh = mask.size
-    mask = mask.rotate(data_list[id-1][2],expand=True)
+    mask = mask.rotate(data_list[mode_d][id-1][2],expand=True)
 
-    ori_img.thumbnail((data_list[id-1][1],data_list[id-1][1]))
+    ori_img.thumbnail((data_list[mode_d][id-1][1],data_list[mode_d][id-1][1]))
     fw, fh = ori_img.size
-    ori_img = ori_img.rotate(data_list[id-1][2],expand=True)
+    ori_img = ori_img.rotate(data_list[mode_d][id-1][2],expand=True)
     
 
 
     
     
 
-    background.paste(ori_img,data_list[id-1][3],mask)
+    background.paste(ori_img,data_list[mode_d][id-1][3],mask)
     background.paste(foreground,(0,0),foreground)
     # print(m)
     if mode == 0:
@@ -89,7 +101,7 @@ else:
     transform = midas_transforms.small_transform
 
 
-def process(filedir, id):
+def process(filedir, id, mode_d):
     
 
     img = cv2.imread(filedir)
@@ -129,20 +141,22 @@ def process(filedir, id):
     createFolder(B_path+'/depth/depth_result_mask/'+filedir.split('/')[-2])
     cv2.imwrite(B_path+'/depth/depth_result_mask/'+f_path, resizedOrig)
     
-    place(filedir,B_path+'/depth/depth_result_mask/'+f_path,id,1)
+    place(filedir,B_path+'/depth/depth_result_mask/'+f_path,id,1,mode_d)
     
     torch.cuda.empty_cache()
     return B_path+'/depth/output/'+f_path
 
-def filter(input_list):
+
+def filter(input_list,temp,mode):
     # print(input_list)
     processed = []
+
     for i in tqdm(range(len(input_list))):
-        processed.append(process(input_list[i],i))
+        processed.append(process(input_list[i],i,mode))
     
     # print(processed)
 
-    return final_stitch.stitch(processed)
+    return final_stitch.stitch(processed,temp)
 
 
 # filter(['test/324-1.png','test/324-2.png','test/324-3.png','test/324-4.png'])

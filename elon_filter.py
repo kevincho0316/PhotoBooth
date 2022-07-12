@@ -6,17 +6,15 @@ import pygame
 from tqdm import tqdm
 B_path= os.path.dirname(os.path.abspath(__file__))
 
-foreground_list=['elon/elon-foregrounds1.png','elon/elon-foregrounds2.png','elon/elon-foregrounds3.png','elon/elon-foregrounds4.png']
-
-foreground_list=['elon/rupi-foregrounds1.png','elon/rupi-foregrounds2.png','elon/rupi-foregrounds3.png','elon/rupi-foregrounds4.png']
+foreground_list=[['elon/elon-foregrounds1.png','elon/elon-foregrounds2.png','elon/elon-foregrounds3.png','elon/elon-foregrounds4.png'],['elon/rupi-foregrounds1.png','elon/rupi-foregrounds2.png','elon/rupi-foregrounds3.png','elon/rupi-foregrounds4.png'],['elon/meme-foregrounds1.png','elon/meme-foregrounds2.png','elon/meme-foregrounds3.png','elon/meme-foregrounds4.png']]
 
 def pilImageToSurface(pilImage):
     return pygame.image.fromstring(
         pilImage.tobytes(), pilImage.size, pilImage.mode).convert()
 
-def process(img, id,mode):
+def process(img, id,mode,select):
     
-    foreground = Image.open(foreground_list[id])
+    foreground = Image.open(foreground_list[select][id])
     if mode ==1:
         background = Image.open(img)
     else:
@@ -50,11 +48,17 @@ def createFolder(directory):
         print('Error: Creating directory. ' + directory)
 
 
-def filter(input_list,temp):
+def filter(input_list,temp,mode):
     # print(input_list)
     processed = []
+    if mode ==elon:
+        mode_s=0
+    elif mode ==rupi:
+        mode_s=1
+    elif mode ==meme:
+        mode_s=2
     for i in tqdm(range(len(input_list))):
-        processed.append(process(input_list[i],i,1))
+        processed.append(process(input_list[i],i,1,mode_s))
     
     # print(processed)
 

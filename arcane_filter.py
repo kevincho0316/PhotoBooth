@@ -189,7 +189,7 @@ def filter(input_list,temp):
     # print(input_list)
     processed = []
     for i in tqdm(range(len(input_list))):
-        processed.append(process(input_list[i],i,1))
+        processed.append(process(input_list[i],i))
     
     # print(processed)
 

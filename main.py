@@ -45,10 +45,10 @@ def predict():
         print("_______________________________")
         print("[id:%s type:%s]______________"%(id,types))
 
-        if types == 'elon':
-            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
-        elif types == 'depth':
-            output_file = depth_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
+        if types == 'elon' or types == 'rupi' or types == 'meme':
+            output_file = elon_filter.filter(sorted(glob(f'{output_zip}/*')),temp,types)
+        elif types == 'depth-elon' or types == 'depth-flower' or types == 'depth-pop':
+            output_file = depth_filter.filter(sorted(glob(f'{output_zip}/*')),temp,types)
         elif types == 'arcane':
             output_file = arcane_filter.filter(sorted(glob(f'{output_zip}/*')),temp)
         elif types == 'anime':
