@@ -448,10 +448,10 @@ while True:
                 img = Image.frombytes("RGBA",(web_x,web_y),pil_string_image)
                 img = final_stitch.crop(img)
                 
-                if types == 'elon':
-                    new_image = elon_filter.process(img, (state-3), 0)
-                elif types == 'depth':
-                    new_image = place(img, img, state-3, 0)
+                if types == 'elon' or types == 'rupi' or types == 'meme':
+                    new_image = elon_filter.process(img, (state-3), 0,types)
+                elif types == 'depth-elon' or types == 'depth-flower' or types == 'depth-pop':
+                    new_image = place(img, img, state-3, 0,types)
                 else:
                     new_image=pilImageToSurface(img)
                 

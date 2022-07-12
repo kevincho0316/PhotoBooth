@@ -14,7 +14,7 @@ def pilImageToSurface(pilImage):
 
 def process(img, id,mode,select):
     
-    foreground = Image.open(foreground_list[select][id])
+    foreground = Image.open(foreground_list[int(select)][id])
     if mode ==1:
         background = Image.open(img)
     else:
